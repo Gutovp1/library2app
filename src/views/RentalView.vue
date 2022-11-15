@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Rental from "@/components/lib/Rental.vue";
+import Rental from "@/components/lib/RentalLib.vue";
 
 export default {
   name: "RentalView",

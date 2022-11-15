@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import User from "@/components/lib/User.vue";
+import User from "@/components/lib/UserLib.vue";
 
 export default {
   name: "UserView",

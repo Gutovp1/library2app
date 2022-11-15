@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Publisher from "@/components/lib/Publisher.vue";
+import Publisher from "@/components/lib/PublisherLib.vue";
 
 export default {
   name: "PublisherView",

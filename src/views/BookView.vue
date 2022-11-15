@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Book from "@/components/lib/Book.vue";
+import Book from "@/components/lib/BookLib.vue";
 
 export default {
   name: "BookView",
