@@ -1,8 +1,27 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <button @click="getUser">Load User</button>
-    <p>{{ user }}</p>
+    <button @click="getUsers">Load User</button>
+    <table>
+      <theader>
+        <tr>
+          <th>ID |</th>
+          <th>NAME |</th>
+          <th>ADDRESS |</th>
+          <th>CITY |</th>
+          <th>EMAIL</th>
+        </tr>
+      </theader>
+      <tbody>
+        <tr v-for="user in users" v-bind:key="user.id">
+          <td>{{ user.id }} |</td>
+          <td>{{ user.name }} |</td>
+          <td>{{ user.address }} |</td>
+          <td>{{ user.city }} |</td>
+          <td>{{ user.email }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -16,13 +35,13 @@ export default {
   },
   data() {
     return {
-      user: "No users loaded",
+      users: [],
     };
   },
   methods: {
-    async getUser() {
+    async getUsers() {
       const userResponse = await User.getAll();
-      this.user = userResponse.data;
+      this.users = userResponse.data;
     },
   },
 };
