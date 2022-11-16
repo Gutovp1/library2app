@@ -99,6 +99,7 @@ export default {
       },
       { text: "Name", value: "name" },
       { text: "City", value: "city" },
+      { text: "Actions", value: "actions", sortable: false },
     ],
     publishers: [],
     editedIndex: -1,
