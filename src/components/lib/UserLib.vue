@@ -2,7 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="users"
-    sort-by="calories"
+    sort-by="name"
     class="elevation-1"
   >
     <template v-slot:top>
@@ -90,7 +90,7 @@
       <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <v-btn color="primary" @click="initialize"> Refresh Users</v-btn>
     </template>
   </v-data-table>
 </template>
