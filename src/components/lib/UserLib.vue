@@ -2,7 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="users"
-    sort-by="name"
+    sort-by="id"
     class="elevation-1"
   >
     <template v-slot:top>
