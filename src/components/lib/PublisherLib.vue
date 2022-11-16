@@ -2,6 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="publishers"
+    :search="search"
     sort-by="id"
     class="elevation-1"
   >
@@ -9,6 +10,14 @@
       <v-toolbar flat>
         <v-toolbar-title>PUBLISHERS</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
@@ -72,7 +81,6 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <!-- <template v-slot:item.actions="{ item }"> -->
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
       <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -90,6 +98,7 @@ export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
+    search: "",
     headers: [
       {
         text: "ID",
@@ -185,53 +194,3 @@ export default {
   },
 };
 </script>
-<!--<template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <button @click="getPublisher">Load Publisher</button>
-    <p>{{ publisher }}</p>
-  </div>
-</template>
-
-
-<script>
-import Publisher from "../../apiservices/Publisher";
-
-export default {
-  name: "PublisherView",
-  props: {
-    msg: String,
-  },
-  data() {
-    return {
-      publisher: "No publisher loaded",
-    };
-  },
-  methods: {
-    async getPublisher() {
-      const publisherResponse = await Publisher.getAll();
-      this.publisher = publisherResponse.data;
-    },
-  },
-};
-</script>
--->
-
-<!-- Add "scoped" attribute to limit CSS to this component only 
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
--->
