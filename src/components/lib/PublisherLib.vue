@@ -23,7 +23,14 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+            <v-btn
+              color="primary"
+              dark
+              class="mb-2"
+              v-bind="attrs"
+              v-on="on"
+              @click="create"
+            >
               New Publisher
             </v-btn>
           </template>
@@ -158,6 +165,7 @@ export default {
     editItem(item) {
       this.editedIndex = this.publishers.indexOf(item);
       this.editedItem = Object.assign({}, item);
+      console.log(this.editedItem.id);
       this.dialog = true;
     },
 
@@ -167,9 +175,13 @@ export default {
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      this.publishers.splice(this.editedIndex, 1);
-      this.closeDelete();
+    async deleteItemConfirm() {
+      // this.publishers.splice(this.editedIndex, 1);
+      await Publisher.deletePublisher(this.editedItem).then((res) => {
+        console.log(res.data);
+        this.initialize();
+        this.closeDelete();
+      });
     },
 
     close() {
@@ -178,6 +190,7 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+      this.$refs.form.resetValidation();
     },
 
     closeDelete() {
@@ -188,23 +201,33 @@ export default {
       });
     },
 
+    create() {
+      this.dialog = true;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
     async save() {
       if (this.$refs.form.validate()) {
         if (!this.editedItem.id) {
-          const publisherResponse = await Publisher.createPublisher(
+          const { name, city } = this.editedItem;
+          const publisherResponse = await Publisher.createPublisher({
+            name,
+            city,
+          });
+          console.log(publisherResponse.data);
+          this.initialize();
+          this.close();
+        } else {
+          const publisherResponse = await Publisher.editPublisher(
             this.editedItem
           );
-          console.log(publisherResponse);
+          console.log(publisherResponse.data);
           this.initialize();
-          this.editedItem = null;
-          this.dialog = false;
+          this.close();
         }
-        // if (this.editedIndex > -1) {
-        //   Object.assign(this.publishers[this.editedIndex], this.editedItem);
-        // } else {
-        //   this.publishers.push(this.editedItem);
-        // }
-        // this.close();
       }
     },
   },
