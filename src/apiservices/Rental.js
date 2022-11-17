@@ -10,7 +10,7 @@ export default {
   },
 
   createRental(rental) {
-    return axios.put(getUrl() + "rental", rental);
+    return axios.post(getUrl() + "rental", rental);
   },
 
   editRental(rental) {
@@ -18,6 +18,6 @@ export default {
   },
 
   deleteRental(rental) {
-    return axios.put(getUrl() + "rental", { data: rental });
+    return axios.delete(getUrl() + "rental", { data: rental });
   },
 };

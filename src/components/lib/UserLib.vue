@@ -5,6 +5,8 @@
     :search="search"
     sort-by="id"
     class="elevation-1"
+    loading="items"
+    loading-text="Loading data... Please wait."
   >
     <template v-slot:top>
       <v-toolbar flat>
@@ -33,34 +35,41 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <!-- <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.id"
                       label="Id"
                     ></v-text-field>
-                  </v-col>
+                  </v-col> -->
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.name"
-                      label="Name"
+                      label="Name*"
+                      hint="Name must contain at least 3 characters."
+                      required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.address"
-                      label="Address"
+                      label="Address*"
+                      hint="Address must contain at least 3 characters."
+                      required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.city"
-                      label="City"
+                      label="City*"
+                      hint="City must contain at least 3 characters."
+                      required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.email"
-                      label="Email"
+                      label="Email*"
+                      required
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -128,14 +137,14 @@ export default {
     users: [],
     editedIndex: -1,
     editedItem: {
-      id: 0,
+      id: "",
       name: "",
       address: "",
       city: "",
       email: "",
     },
     defaultItem: {
-      id: 0,
+      id: "",
       name: "",
       address: "",
       city: "",

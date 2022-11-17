@@ -5,6 +5,8 @@
     :search="search"
     sort-by="id"
     class="elevation-1"
+    loading="items"
+    loading-text="Loading data... Please wait."
   >
     <template v-slot:top>
       <v-toolbar flat>
@@ -31,28 +33,25 @@
             </v-card-title>
 
             <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.id"
-                      label="Id"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.city"
-                      label="City"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
+              <v-form class="mx-2" ref="form">
+                <!-- <v-text-field
+                  v-model="editedItem.id"
+                  label="Id"
+                  required
+                ></v-text-field> -->
+                <v-text-field
+                  v-model="editedItem.name"
+                  label="Publisher Name"
+                  :rules="[rules.required, rules.min, rules.max]"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.city"
+                  label="Publisher City"
+                  :rules="[rules.required, rules.min, rules.max]"
+                  required
+                ></v-text-field>
+              </v-form>
             </v-card-text>
 
             <v-card-actions>
@@ -99,6 +98,12 @@ export default {
     dialog: false,
     dialogDelete: false,
     search: "",
+    rules: {
+      required: (content) => !!content || "This field is required.",
+      max: (content) =>
+        content.length <= 100 || "Write no more than 100 characters.",
+      min: (content) => content.length >= 4 || "Write at least 4 characters.",
+    },
     headers: [
       {
         text: "ID",
@@ -113,12 +118,12 @@ export default {
     publishers: [],
     editedIndex: -1,
     editedItem: {
-      id: 0,
+      id: "",
       name: "",
       city: "",
     },
     defaultItem: {
-      id: 0,
+      id: "",
       name: "",
       city: "",
     },
@@ -183,13 +188,24 @@ export default {
       });
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.publishers[this.editedIndex], this.editedItem);
-      } else {
-        this.publishers.push(this.editedItem);
+    async save() {
+      if (this.$refs.form.validate()) {
+        if (!this.editedItem.id) {
+          const publisherResponse = await Publisher.createPublisher(
+            this.editedItem
+          );
+          console.log(publisherResponse);
+          this.initialize();
+          this.editedItem = null;
+          this.dialog = false;
+        }
+        // if (this.editedIndex > -1) {
+        //   Object.assign(this.publishers[this.editedIndex], this.editedItem);
+        // } else {
+        //   this.publishers.push(this.editedItem);
+        // }
+        // this.close();
       }
-      this.close();
     },
   },
 };

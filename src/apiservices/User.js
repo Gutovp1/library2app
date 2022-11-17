@@ -10,7 +10,7 @@ export default {
   },
 
   createUser(user) {
-    return axios.put(getUrl() + "user", user);
+    return axios.post(getUrl() + "user", user);
   },
 
   editUser(user) {
@@ -18,6 +18,6 @@ export default {
   },
 
   deleteUser(user) {
-    return axios.put(getUrl() + "user", { data: user });
+    return axios.delete(getUrl() + "user", { data: user });
   },
 };

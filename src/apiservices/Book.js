@@ -10,7 +10,7 @@ export default {
   },
 
   createBook(book) {
-    return axios.put(getUrl() + "book", book);
+    return axios.post(getUrl() + "book", book);
   },
 
   editBook(book) {
@@ -18,6 +18,6 @@ export default {
   },
 
   deleteBook(book) {
-    return axios.put(getUrl() + "book", { data: book });
+    return axios.delete(getUrl() + "book", { data: book });
   },
 };

@@ -10,14 +10,14 @@ export default {
   },
 
   createPublisher(publisher) {
-    return axios.put(getUrl() + "publisher", publisher);
+    return axios.post(getUrl() + "publisher/create", publisher);
   },
 
   editPublisher(publisher) {
-    return axios.put(getUrl() + "publisher", publisher);
+    return axios.put(getUrl() + "publisher/edit", publisher);
   },
 
   deletePublisher(publisher) {
-    return axios.put(getUrl() + "publisher", { data: publisher });
+    return axios.delete(getUrl() + "publisher/delete", { data: publisher });
   },
 };
