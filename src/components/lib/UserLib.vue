@@ -23,7 +23,14 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+            <v-btn
+              color="primary"
+              dark
+              class="mb-2"
+              v-bind="attrs"
+              v-on="on"
+              @click="create"
+            >
               New User
             </v-btn>
           </template>
@@ -33,47 +40,31 @@
             </v-card-title>
 
             <v-card-text>
-              <v-container>
-                <v-row>
-                  <!-- <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.id"
-                      label="Id"
-                    ></v-text-field>
-                  </v-col> -->
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Name*"
-                      hint="Name must contain at least 3 characters."
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.address"
-                      label="Address*"
-                      hint="Address must contain at least 3 characters."
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.city"
-                      label="City*"
-                      hint="City must contain at least 3 characters."
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.email"
-                      label="Email*"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
+              <v-form class="mx-2" ref="form">
+                <v-text-field
+                  v-model="editedItem.name"
+                  label="Name*"
+                  :rules="rulesReqMaxMin"
+                  hint="Name must contain at least 4 characters."
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.address"
+                  label="Address*"
+                  :rules="rulesReqMaxMin"
+                  hint="Address must contain at least 4 characters."
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.city"
+                  label="City*"
+                  :rules="rulesReqMaxMin"
+                  hint="City must contain at least 4 characters."
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.email"
+                  label="Email*"
+                  :rules="rulesReqMaxMin.concat(rulesEmail)"
+                ></v-text-field>
+              </v-form>
             </v-card-text>
 
             <v-card-actions>
@@ -121,6 +112,18 @@ export default {
     dialog: false,
     dialogDelete: false,
     search: "",
+    rulesReqMaxMin: [
+      (v) => !!v || "This field is required.",
+      (v) =>
+        (v && v.length <= 100) || "Field must have less than 100 characters.",
+      (v) => (v && v.length >= 4) || "Field must have more than 3 characters.",
+    ],
+    rulesEmail: [
+      (v) =>
+        /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+          v
+        ) || "E-mail must be valid",
+    ],
     headers: [
       {
         text: "ID",
@@ -190,9 +193,13 @@ export default {
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      this.users.splice(this.editedIndex, 1);
-      this.closeDelete();
+    async deleteItemConfirm() {
+      // this.users.splice(this.editedIndex, 1);
+      await User.deleteUser(this.editedItem).then((res) => {
+        console.log(res.data);
+        this.initialize();
+        this.closeDelete();
+      });
     },
 
     close() {
@@ -201,6 +208,7 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+      this.$refs.form.resetValidation();
     },
 
     closeDelete() {
@@ -211,84 +219,31 @@ export default {
       });
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.users[this.editedIndex], this.editedItem);
-      } else {
-        this.users.push(this.editedItem);
+    create() {
+      this.dialog = true;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    async save() {
+      if (this.$refs.form.validate()) {
+        if (!this.editedItem.id) {
+          delete this.editedItem.id; //id will be created in db
+          console.log(this.editedItem);
+          const userResponse = await User.createUser(this.editedItem);
+          console.log(userResponse.data);
+          this.initialize();
+          this.close();
+        } else {
+          const userResponse = await User.editUser(this.editedItem);
+          console.log(userResponse.data);
+          this.initialize();
+          this.close();
+        }
       }
-      this.close();
     },
   },
 };
 </script>
-<!--<template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <button @click="getUsers">Load User</button>
-    <table>
-      <theader>
-        <tr>
-          <th>ID |</th>
-          <th>NAME |</th>
-          <th>ADDRESS |</th>
-          <th>CITY |</th>
-          <th>EMAIL</th>
-        </tr>
-      </theader>
-      <tbody>
-        <tr v-for="user in users" v-bind:key="user.id">
-          <td>{{ user.id }} |</td>
-          <td>{{ user.name }} |</td>
-          <td>{{ user.address }} |</td>
-          <td>{{ user.city }} |</td>
-          <td>{{ user.email }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</template>
--->
-
-<!--<script>
-import User from "../../apiservices/User.js";
-
-export default {
-  name: "UserView",
-  props: {
-    msg: String,
-  },
-  data() {
-    return {
-      users: [],
-    };
-  },
-  methods: {
-    async getUsers() {
-      const userResponse = await User.getAll();
-      this.users = userResponse.data;
-    },
-  },
-};
-</script>
--->
-
-<!-- Add "scoped" attribute to limit CSS to this component only 
-
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
--->

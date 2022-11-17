@@ -41,20 +41,15 @@
 
             <v-card-text>
               <v-form class="mx-2" ref="form">
-                <!-- <v-text-field
-                  v-model="editedItem.id"
-                  label="Id"
-                  required
-                ></v-text-field> -->
                 <v-text-field
                   v-model="editedItem.name"
-                  label="Publisher Name"
+                  label="Publisher Name*"
                   :rules="[rules.required, rules.min, rules.max]"
                   required
                 ></v-text-field>
                 <v-text-field
                   v-model="editedItem.city"
-                  label="Publisher City"
+                  label="Publisher City*"
                   :rules="[rules.required, rules.min, rules.max]"
                   required
                 ></v-text-field>
@@ -108,8 +103,9 @@ export default {
     rules: {
       required: (content) => !!content || "This field is required.",
       max: (content) =>
-        content.length <= 100 || "Write no more than 100 characters.",
-      min: (content) => content.length >= 4 || "Write at least 4 characters.",
+        content.length <= 100 || "Field must have less than 100 characters.",
+      min: (content) =>
+        content.length >= 4 || "Field must have more than 3 characters.",
     },
     headers: [
       {
@@ -165,7 +161,7 @@ export default {
     editItem(item) {
       this.editedIndex = this.publishers.indexOf(item);
       this.editedItem = Object.assign({}, item);
-      console.log(this.editedItem.id);
+      // console.log(this.editedItem.id);
       this.dialog = true;
     },
 

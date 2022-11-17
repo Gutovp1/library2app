@@ -14,10 +14,10 @@ export default {
   },
 
   editUser(user) {
-    return axios.put(getUrl() + "user", user);
+    return axios.put(getUrl() + "user/" + user.id, user);
   },
 
   deleteUser(user) {
-    return axios.delete(getUrl() + "user", { data: user });
+    return axios.delete(getUrl() + "user/" + user.id, { data: user });
   },
 };
