@@ -48,6 +48,7 @@
                   :item-text="'title'"
                   :item-value="'id'"
                   :rules="rulesRequired"
+                  menu-props="auto"
                   label="Book"
                 ></v-select>
                 <v-select
@@ -56,22 +57,101 @@
                   :items="users"
                   :item-text="'name'"
                   :item-value="'id'"
+                  menu-props="auto"
                   label="User"
                 ></v-select>
-                <v-text-field
-                  v-model="editedItem.rentDate"
-                  :rules="rulesRequired"
-                  label="Rental date"
-                ></v-text-field>
-                <v-text-field
-                  v-model="editedItem.returnDate"
-                  :rules="rulesRequired"
-                  label="Deadline to return"
-                ></v-text-field>
-                <!-- <v-text-field
-                  v-model="editedItem.returnRealDate"
-                  label="Return date"
-                ></v-text-field> -->
+
+                <v-menu
+                  ref="menuDate1"
+                  v-model="menuDate1"
+                  :return-value.sync="editedItem.rentDate"
+                  :close-on-click="false"
+                  :close-on-content-click="false"
+                  offset-y
+                  offset-x
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-bind="attrs"
+                      v-on="on"
+                      v-model="editedItem.rentDate"
+                      :rules="rulesRequired"
+                      label="Rental date"
+                    ></v-text-field>
+                  </template>
+                  <template>
+                    <v-row justify="space-around" align="center">
+                      <v-date-picker
+                        v-model="editedItem.rentDate"
+                        no-title
+                        scrollable
+                        elevation="15"
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="menuDate1 = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="$refs.menuDate1.save(editedItem.rentDate)"
+                        >
+                          Save
+                        </v-btn>
+                      </v-date-picker>
+                    </v-row>
+                  </template>
+                </v-menu>
+
+                <v-menu
+                  ref="menuDate2"
+                  v-model="menuDate2"
+                  :return-value.sync="editedItem.returnDate"
+                  :close-on-click="false"
+                  :close-on-content-click="false"
+                  offset-y
+                  offset-x
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-bind="attrs"
+                      v-on="on"
+                      v-model="editedItem.returnDate"
+                      :rules="rulesRequired"
+                      label="Deadline to return"
+                    ></v-text-field>
+                  </template>
+                  <template>
+                    <v-row justify="space-around" align="center">
+                      <v-date-picker
+                        v-model="editedItem.returnDate"
+                        no-title
+                        scrollable
+                        elevation="15"
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="menuDate2 = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="$refs.menuDate2.save(editedItem.returnDate)"
+                        >
+                          Save
+                        </v-btn>
+                      </v-date-picker>
+                    </v-row>
+                  </template>
+                </v-menu>
               </v-form>
             </v-card-text>
 
@@ -122,6 +202,12 @@ export default {
     dialog: false,
     dialogDelete: false,
     search: "",
+    // picker: null,
+    picker: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString()
+      .substr(0, 10),
+    menuDate1: "",
+    menuDate2: "",
     rulesRequired: [(v) => !!v || "This field is required."],
     headers: [
       {
@@ -134,7 +220,7 @@ export default {
       { text: "User", value: "userName" },
       { text: "Rental date", value: "rentDate" },
       { text: "Deadline to Return", value: "returnDate" },
-      // { text: "Return date", value: "returnRealDate" },
+      { text: "Return Date", value: "returnRealDate" },
       { text: "Actions", value: "actions", sortable: false },
     ],
     rentals: [],
@@ -145,7 +231,7 @@ export default {
       userId: "",
       rentDate: "",
       returnDate: "",
-      // returnRealDate: "",
+      returnRealDate: "",
     },
     defaultItem: {
       id: "",
@@ -153,7 +239,7 @@ export default {
       userId: "",
       rentDate: "",
       returnDate: "",
-      // returnRealDate: "",
+      returnRealDate: "",
     },
     books: [],
     editedBook: {
@@ -221,6 +307,12 @@ export default {
           this.rentals = respo.data;
         });
     },
+    // saveDate(pick) {
+    //   this.$refs.menuDate1.save(pick);
+    //   this.picker = pick;
+    // },
+
+    // allowedDates: (val) => val >= this.picker,
 
     editItem(item) {
       this.editedIndex = this.rentals.indexOf(item);
@@ -245,6 +337,7 @@ export default {
         this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
       });
+      this.$refs.form.resetValidation();
     },
 
     closeDelete() {
