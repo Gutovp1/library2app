@@ -7,6 +7,7 @@
     class="elevation-1"
     loading="items"
     loading-text="Loading data... Please wait."
+    no-results-text="No rentals found."
   >
     <template v-slot:top>
       <v-toolbar flat>

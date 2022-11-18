@@ -7,6 +7,7 @@
     class="elevation-1"
     loading="items"
     loading-text="Loading data... Please wait."
+    no-results-text="No books found."
   >
     <template v-slot:top>
       <v-toolbar flat>
@@ -23,7 +24,14 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+            <v-btn
+              color="primary"
+              dark
+              class="mb-2"
+              v-bind="attrs"
+              v-on="on"
+              @click="create"
+            >
               New Book
             </v-btn>
           </template>
@@ -33,46 +41,38 @@
             </v-card-title>
 
             <v-card-text>
-              <v-container>
-                <v-row>
-                  <!-- <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.id"
-                      label="Id"
-                    ></v-text-field>
-                  </v-col> -->
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.title"
-                      label="Title"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.author"
-                      label="Author"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.publisherName"
-                      label="Publisher"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.quantity"
-                      label="Quantity"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.year"
-                      label="Year"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
+              <v-form class="mx-2" ref="form">
+                <v-text-field
+                  v-model="editedItem.title"
+                  :rules="rulesRequired.concat(rulesMaxMin)"
+                  label="Title"
+                  count
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.author"
+                  :rules="rulesRequired.concat(rulesMaxMin)"
+                  label="Author"
+                ></v-text-field>
+                <v-select
+                  v-model="editedItem.publisherId"
+                  :items="publishers"
+                  :item-text="'name'"
+                  :item-value="'id'"
+                  :rules="rulesRequired"
+                  menu-props="auto"
+                  label="Publisher"
+                ></v-select>
+                <v-text-field
+                  v-model="editedItem.quantity"
+                  :rules="rulesRequired.concat(rulesInteger)"
+                  label="Quantity"
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.year"
+                  :rules="rulesRequired.concat(rulesYear)"
+                  label="Year"
+                ></v-text-field>
+              </v-form>
             </v-card-text>
 
             <v-card-actions>
@@ -114,12 +114,23 @@
 
 <script>
 import Book from "../../apiservices/Book.js";
+import Publisher from "../../apiservices/Publisher.js";
 
 export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
     search: "",
+    rulesRequired: [(v) => !!v || "This field is required."],
+    rulesMaxMin: [
+      (v) =>
+        (v && v.length <= 100) || "Field must have less than 100 characters.",
+      (v) => (v && v.length >= 4) || "Field must have more than 3 characters.",
+    ],
+    rulesInteger: [(v) => /^[0-9]+$/.test(v) || "Enter only numbers."],
+    rulesYear: [
+      (v) => /^[0-9]{4}$/.test(v) || "Enter a valid year containing 4 numbers.",
+    ],
     headers: [
       {
         text: "ID",
@@ -140,7 +151,7 @@ export default {
       id: "",
       title: "",
       author: "",
-      publisherName: "",
+      publisherId: "",
       quantity: "",
       year: "",
     },
@@ -148,9 +159,20 @@ export default {
       id: "",
       title: "",
       author: "",
-      publisherName: "",
+      publisherId: "",
       quantity: "",
       year: "",
+    },
+    publishers: [],
+    editedPublisher: {
+      id: "",
+      name: "",
+      city: "",
+    },
+    defaultPublisher: {
+      id: "",
+      name: "",
+      city: "",
     },
   }),
 
@@ -176,107 +198,77 @@ export default {
   methods: {
     async initialize() {
       //get all books
-      const bookResponse = await Book.getAll();
-      this.books = bookResponse.data;
+      await Book.getAll().then((res) => {
+        this.books = res.data;
+      }),
+        await Publisher.getAll().then((response) => {
+          this.publishers = response.data;
+        });
     },
 
     editItem(item) {
       this.editedIndex = this.books.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedItem = { ...item }; //Object assign does not work properly here
       this.dialog = true;
     },
 
     deleteItem(item) {
       this.editedIndex = this.books.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedItem = { ...item };
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      this.books.splice(this.editedIndex, 1);
-      this.closeDelete();
+    async deleteItemConfirm() {
+      await Book.deleteBook(this.editedItem).then((res) => {
+        console.log(res.data);
+        this.initialize();
+        this.closeDelete();
+      });
     },
 
     close() {
       this.dialog = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedItem = { ...this.defaultItem };
+        // this.editedPublisher = { ...this.defaultPublisher }; ////
         this.editedIndex = -1;
       });
+      this.$refs.form.resetValidation();
     },
 
     closeDelete() {
       this.dialogDelete = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedItem = { ...this.defaultItem };
+        // this.editedPublisher = { ...this.defaultPublisher }; /////
+        this.editedIndex = -1;
+      });
+    },
+    create() {
+      this.dialog = true;
+      this.$nextTick(() => {
+        this.editedItem = { ...this.defaultItem };
+        // this.editedPublisher = { ...this.defaultPublisher }; /////
         this.editedIndex = -1;
       });
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.books[this.editedIndex], this.editedItem);
-      } else {
-        this.books.push(this.editedItem);
+    async save() {
+      if (this.$refs.form.validate()) {
+        if (!this.editedItem.id) {
+          delete this.editedItem.id; //id will be created in db
+          const bookResponse = await Book.createBook(this.editedItem);
+          console.log(bookResponse.data);
+          this.initialize();
+          this.close();
+        } else {
+          const bookResponse = await Book.editBook(this.editedItem);
+          console.log(bookResponse.data);
+          this.initialize();
+          this.close();
+        }
       }
-      this.close();
     },
   },
 };
 </script>
-
-//
-<!--
-// <template>
-//   <div class="hello">
-//     <h1>{{ msg }}</h1>
-//     <button @click="getBooks">Load Books</button>
-//     <p>{{ books }}</p>
-//   </div>
-// </template>
-
-// <script>
-// import Book from "../../apiservices/Book";
-
-// export default {
-//   name: "BookView",
-//   props: {
-//     msg: String,
-//   },
-//   data() {
-//     return {
-//       books: "No books loaded",
-//     };
-//   },
-//   methods: {
-//     async getBooks() {
-//       const booksResponse = await Book.getAll();
-//       this.books = booksResponse.data;
-//     },
-//   },
-// };
-//
-//
-//
-</script>
- -->
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<!--
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
-
--->

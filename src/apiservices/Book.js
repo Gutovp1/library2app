@@ -14,10 +14,10 @@ export default {
   },
 
   editBook(book) {
-    return axios.put(getUrl() + "book", book);
+    return axios.put(getUrl() + "book/" + book.id, book);
   },
 
   deleteBook(book) {
-    return axios.delete(getUrl() + "book", { data: book });
+    return axios.delete(getUrl() + "book/" + book.id, { data: book });
   },
 };
