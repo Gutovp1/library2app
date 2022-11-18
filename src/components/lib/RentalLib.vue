@@ -24,7 +24,14 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+            <v-btn
+              color="primary"
+              dark
+              class="mb-2"
+              v-bind="attrs"
+              v-on="on"
+              @click="create"
+            >
               New Rental
             </v-btn>
           </template>
@@ -34,46 +41,38 @@
             </v-card-title>
 
             <v-card-text>
-              <v-container>
-                <v-row>
-                  <!-- <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.id"
-                      label="Id"
-                    ></v-text-field>
-                  </v-col> -->
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.bookTitle"
-                      label="Book"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.userName"
-                      label="User"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.rentDate"
-                      label="Rental Date"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.returnDate"
-                      label="Return Date"
-                    ></v-text-field>
-                  </v-col>
-                  <!-- <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.year"
-                      label="Year"
-                    ></v-text-field>
-                  </v-col> -->
-                </v-row>
-              </v-container>
+              <v-form class="mx-2" ref="form">
+                <v-select
+                  v-model="editedItem.bookId"
+                  :items="books"
+                  :item-text="'title'"
+                  :item-value="'id'"
+                  :rules="rulesRequired"
+                  label="Book"
+                ></v-select>
+                <v-select
+                  v-model="editedItem.userId"
+                  :rules="rulesRequired"
+                  :items="users"
+                  :item-text="'name'"
+                  :item-value="'id'"
+                  label="User"
+                ></v-select>
+                <v-text-field
+                  v-model="editedItem.rentDate"
+                  :rules="rulesRequired"
+                  label="Rental date"
+                ></v-text-field>
+                <v-text-field
+                  v-model="editedItem.returnDate"
+                  :rules="rulesRequired"
+                  label="Deadline to return"
+                ></v-text-field>
+                <!-- <v-text-field
+                  v-model="editedItem.returnRealDate"
+                  label="Return date"
+                ></v-text-field> -->
+              </v-form>
             </v-card-text>
 
             <v-card-actions>
@@ -115,12 +114,15 @@
 
 <script>
 import Rental from "../../apiservices/Rental.js";
+import Book from "../../apiservices/Book.js";
+import User from "../../apiservices/User.js";
 
 export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
     search: "",
+    rulesRequired: [(v) => !!v || "This field is required."],
     headers: [
       {
         text: "ID",
@@ -130,28 +132,60 @@ export default {
       },
       { text: "Book", value: "bookTitle" },
       { text: "User", value: "userName" },
-      { text: "Rental Date", value: "rentDate" },
-      { text: "Return Date", value: "returnDate" },
-      // { text: "Year", value: "year" },
+      { text: "Rental date", value: "rentDate" },
+      { text: "Deadline to Return", value: "returnDate" },
+      // { text: "Return date", value: "returnRealDate" },
       { text: "Actions", value: "actions", sortable: false },
     ],
     rentals: [],
     editedIndex: -1,
     editedItem: {
       id: "",
-      bookTitle: "",
-      userName: "",
+      bookId: "",
+      userId: "",
       rentDate: "",
       returnDate: "",
-      // year: "",
+      // returnRealDate: "",
     },
     defaultItem: {
       id: "",
-      bookTitle: "",
-      userName: "",
+      bookId: "",
+      userId: "",
       rentDate: "",
       returnDate: "",
-      // year: "",
+      // returnRealDate: "",
+    },
+    books: [],
+    editedBook: {
+      id: "",
+      title: "",
+      author: "",
+      publisherId: "",
+      quantity: "",
+      year: "",
+    },
+    defaultBook: {
+      id: "",
+      title: "",
+      author: "",
+      publisherId: "",
+      quantity: "",
+      year: "",
+    },
+    users: [],
+    editedUser: {
+      id: "",
+      name: "",
+      address: "",
+      city: "",
+      email: "",
+    },
+    defaultUser: {
+      id: "",
+      name: "",
+      address: "",
+      city: "",
+      email: "",
     },
   }),
 
@@ -177,19 +211,26 @@ export default {
   methods: {
     async initialize() {
       //get all rentals
-      const rentalResponse = await Rental.getAll();
-      this.rentals = rentalResponse.data;
+      await User.getAll().then((res) => {
+        this.users = res.data;
+      }),
+        await Book.getAll().then((resp) => {
+          this.books = resp.data;
+        }),
+        await Rental.getAll().then((respo) => {
+          this.rentals = respo.data;
+        });
     },
 
     editItem(item) {
       this.editedIndex = this.rentals.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedItem = { ...item };
       this.dialog = true;
     },
 
     deleteItem(item) {
       this.editedIndex = this.rentals.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedItem = { ...item };
       this.dialogDelete = true;
     },
 
@@ -201,7 +242,7 @@ export default {
     close() {
       this.dialog = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
       });
     },
@@ -209,18 +250,35 @@ export default {
     closeDelete() {
       this.dialogDelete = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
       });
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.rentals[this.editedIndex], this.editedItem);
-      } else {
-        this.rentals.push(this.editedItem);
+    create() {
+      this.dialog = true;
+      this.$nextTick(() => {
+        this.editedItem = { ...this.defaultItem };
+        // this.editedPublisher = { ...this.defaultPublisher }; /////
+        this.editedIndex = -1;
+      });
+    },
+
+    async save() {
+      if (this.$refs.form.validate()) {
+        if (!this.editedItem.id) {
+          delete this.editedItem.id; //id will be created in db
+          const rentalResponse = await Rental.createRental(this.editedItem);
+          console.log(rentalResponse.data);
+          this.initialize();
+          this.close();
+        } else {
+          const rentalResponse = await Rental.editRental(this.editedItem);
+          console.log(rentalResponse.data);
+          this.initialize();
+          this.close();
+        }
       }
-      this.close();
     },
   },
 };

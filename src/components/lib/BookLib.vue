@@ -198,11 +198,11 @@ export default {
   methods: {
     async initialize() {
       //get all books
-      await Book.getAll().then((res) => {
-        this.books = res.data;
+      await Publisher.getAll().then((response) => {
+        this.publishers = response.data;
       }),
-        await Publisher.getAll().then((response) => {
-          this.publishers = response.data;
+        await Book.getAll().then((res) => {
+          this.books = res.data;
         });
     },
 
