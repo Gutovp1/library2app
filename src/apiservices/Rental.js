@@ -14,10 +14,10 @@ export default {
   },
 
   editRental(rental) {
-    return axios.put(getUrl() + "rental", rental);
+    return axios.put(getUrl() + "rental/", rental);
   },
 
   deleteRental(rental) {
-    return axios.delete(getUrl() + "rental", { data: rental });
+    return axios.delete(getUrl() + "rental/" + rental.id, { data: rental });
   },
 };

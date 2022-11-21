@@ -142,6 +142,7 @@ export default {
       { text: "Author", value: "author" },
       { text: "Publisher", value: "publisherName" },
       { text: "Quantity", value: "quantity" },
+      { text: "Available", value: "quantityAvailable" },
       { text: "Year", value: "year" },
       { text: "Actions", value: "actions", sortable: false },
     ],
@@ -153,6 +154,7 @@ export default {
       author: "",
       publisherId: "",
       quantity: "",
+      quantityAvailable: "",
       year: "",
     },
     defaultItem: {

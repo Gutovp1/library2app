@@ -8,6 +8,9 @@ export default {
   getAll() {
     return axios.get(getUrl() + "book");
   },
+  getAvailable() {
+    return axios.get(getUrl() + "book/available");
+  },
 
   createBook(book) {
     return axios.post(getUrl() + "book", book);

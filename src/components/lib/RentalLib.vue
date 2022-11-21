@@ -81,6 +81,8 @@
                   </template>
                   <template>
                     <v-row justify="space-around" align="center">
+                      <!-- :format="'dd / MM / yyyy'"
+                        :available-dates="{ start: new Date(), end: null }" -->
                       <v-date-picker
                         v-model="editedItem.rentDate"
                         no-title
@@ -203,9 +205,12 @@ export default {
     dialogDelete: false,
     search: "",
     // picker: null,
-    picker: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-      .toISOString()
-      .substr(0, 10),
+    // picker: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+    // datePicker: {
+    //   format: "dd/MM/yyy",
+    //   disable: new Date().toISOString().substr(0, 10),
+    // },
+    picker: new Date().toISOString().substr(0, 10),
     menuDate1: "",
     menuDate2: "",
     rulesRequired: [(v) => !!v || "This field is required."],
@@ -277,7 +282,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Rental" : "Edit Rental";
+      return this.editedIndex === -1 ? "New Rental" : "Finish Rental";
     },
   },
 
@@ -300,7 +305,7 @@ export default {
       await User.getAll().then((res) => {
         this.users = res.data;
       }),
-        await Book.getAll().then((resp) => {
+        await Book.getAvailable().then((resp) => {
           this.books = resp.data;
         }),
         await Rental.getAll().then((respo) => {
@@ -326,9 +331,12 @@ export default {
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      this.rentals.splice(this.editedIndex, 1);
-      this.closeDelete();
+    async deleteItemConfirm() {
+      await Rental.deleteRental(this.editedItem).then((res) => {
+        console.log(res.data);
+        this.initialize();
+        this.closeDelete();
+      });
     },
 
     close() {
@@ -361,70 +369,13 @@ export default {
       if (this.$refs.form.validate()) {
         if (!this.editedItem.id) {
           delete this.editedItem.id; //id will be created in db
-          const rentalResponse = await Rental.createRental(this.editedItem);
-          console.log(rentalResponse.data);
-          this.initialize();
-          this.close();
-        } else {
-          const rentalResponse = await Rental.editRental(this.editedItem);
-          console.log(rentalResponse.data);
-          this.initialize();
-          this.close();
         }
+        const rentalResponse = await Rental.editRental(this.editedItem);
+        console.log(rentalResponse.data);
+        this.initialize();
+        this.close();
       }
     },
   },
 };
 </script>
-
-<!--
-<template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <button @click="getRental">Load Rental</button>
-    <p>{{ rental }}</p>
-  </div>
-</template>
-
-<script>
-import Rental from "../../apiservices/Rental";
-
-export default {
-  name: "RentalView",
-  props: {
-    msg: String,
-  },
-  data() {
-    return {
-      rental: "No rental loaded",
-    };
-  },
-  methods: {
-    async getRental() {
-      const rentalResponse = await Rental.getAll();
-      this.rental = rentalResponse.data;
-    },
-  },
-};
-</script>
--->
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<!--
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
--->
