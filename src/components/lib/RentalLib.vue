@@ -87,6 +87,7 @@
                       <!-- :format="'dd / MM / yyyy'"-->
                       <v-date-picker
                         v-model="editedItem.rentDate"
+                        :min="picker"
                         no-title
                         scrollable
                         elevation="15"
@@ -134,6 +135,7 @@
                     <v-row justify="space-around" align="center">
                       <v-date-picker
                         v-model="editedItem.returnDate"
+                        :min="editedItem.rentDate"
                         no-title
                         scrollable
                         elevation="15"
@@ -156,8 +158,8 @@
                 </v-menu>
                 <v-menu
                   v-if="returnBook"
-                  ref="menuDate1"
-                  v-model="menuDate1"
+                  ref="menuDate2"
+                  v-model="menuDate2"
                   :close-on-content-click="false"
                   :return-value.sync="editedItem.returnRealDate"
                   transition="scale-transition"
@@ -175,21 +177,22 @@
                       :rules="rulesRequired"
                     ></v-text-field>
                   </template>
+                  <!-- min="{{picker}}" -->
                   <v-date-picker
                     v-model="editedItem.returnRealDate"
-                    min="'picker'"
+                    :min="editedItem.rentDate"
                     no-title
                     scrollable
                   >
                     <v-spacer></v-spacer>
 
-                    <v-btn text color="primary" @click="menuDate1 = false">
+                    <v-btn text color="primary" @click="menuDate2 = false">
                       Cancel
                     </v-btn>
                     <v-btn
                       text
                       color="primary"
-                      @click="$refs.menuDate1.save(editedItem.returnRealDate)"
+                      @click="$refs.menuDate2.save(editedItem.returnRealDate)"
                     >
                       OK
                     </v-btn>
@@ -277,11 +280,6 @@ export default {
     dialogDelete: false,
     search: "",
     // picker: null,
-    // picker: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-    // datePicker: {
-    //   format: "dd/MM/yyy",
-    //   disable: new Date().toISOString().substr(0, 10),
-    // },
     picker: new Date().toISOString().substr(0, 10),
     menuDate1: "",
     menuDate2: "",
@@ -355,7 +353,9 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Rental" : "Finish Rental";
+      return this.editedIndex === -1
+        ? "New Rental"
+        : `Finish Rental (due date: ${this.editedItem.returnDate})`;
     },
   },
 
@@ -366,6 +366,7 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
+    // picker: this.editedItem.rentDate,
   },
 
   created() {
@@ -385,12 +386,6 @@ export default {
           this.rentals = respo.data;
         });
     },
-    // saveDate(pick) {
-    //   this.$refs.menuDate1.save(pick);
-    //   this.picker = pick;
-    // },
-
-    // allowedDates: (val) => val >= this.picker,
 
     returnItem(item) {
       this.editedIndex = this.rentals.indexOf(item);
