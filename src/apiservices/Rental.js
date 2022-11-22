@@ -14,7 +14,7 @@ export default {
   },
 
   editRental(rental) {
-    return axios.put(getUrl() + "rental/", rental);
+    return axios.put(getUrl() + "rental/" + rental.id, rental);
   },
 
   deleteRental(rental) {

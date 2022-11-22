@@ -43,6 +43,7 @@
             <v-card-text>
               <v-form class="mx-2" ref="form">
                 <v-select
+                  v-if="!returnBook"
                   v-model="editedItem.bookId"
                   :items="books"
                   :item-text="'title'"
@@ -52,6 +53,7 @@
                   label="Book"
                 ></v-select>
                 <v-select
+                  v-if="!returnBook"
                   v-model="editedItem.userId"
                   :rules="rulesRequired"
                   :items="users"
@@ -62,6 +64,7 @@
                 ></v-select>
 
                 <v-menu
+                  v-if="!returnBook"
                   ref="menuDate1"
                   v-model="menuDate1"
                   :return-value.sync="editedItem.rentDate"
@@ -110,6 +113,7 @@
                 </v-menu>
 
                 <v-menu
+                  v-if="!returnBook"
                   ref="menuDate2"
                   v-model="menuDate2"
                   :return-value.sync="editedItem.returnDate"
@@ -154,6 +158,47 @@
                     </v-row>
                   </template>
                 </v-menu>
+                <v-menu
+                  v-if="returnBook"
+                  ref="menuDate2"
+                  v-model="menuDate2"
+                  :close-on-content-click="false"
+                  :return-value.sync="editedItem.returnRealDate"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <!-- append-icon="mdi-calendar" -->
+                    <!-- readonly -->
+                    <v-text-field
+                      v-model="editedItem.returnRealDate"
+                      label="Return Date"
+                      v-bind="attrs"
+                      v-on="on"
+                      :rules="rulesRequired"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="editedItem.returnRealDate"
+                    no-title
+                    scrollable
+                  >
+                    <v-spacer></v-spacer>
+
+                    <v-btn text color="primary" @click="menuDate2 = false">
+                      Cancel
+                    </v-btn>
+
+                    <v-btn
+                      text
+                      color="primary"
+                      @click="$refs.menuDate2.save(editedItem.returnRealDate)"
+                    >
+                      OK
+                    </v-btn>
+                  </v-date-picker>
+                </v-menu>
               </v-form>
             </v-card-text>
 
@@ -185,11 +230,27 @@
     </template>
     <!-- <template v-slot:item.actions="{ item }"> -->
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon
+        v-if="!item.returnRealDate"
+        small
+        class="mr-2"
+        @click="returnItem(item)"
+      >
+        mdi-book
+      </v-icon>
+      <v-icon v-else small @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresh Rentals</v-btn>
+    </template>
+    <template v-slot:[`item.returnRealDate`]="{ item }">
+      {{
+        item.returnRealDate
+          ? item.returnRealDate > item.returnDate
+            ? `${item.returnRealDate} (Late return)`
+            : `${item.returnRealDate} (On time)`
+          : "Return pending"
+      }}
     </template>
   </v-data-table>
 </template>
@@ -202,6 +263,7 @@ import User from "../../apiservices/User.js";
 export default {
   data: () => ({
     dialog: false,
+    returnBook: false,
     dialogDelete: false,
     search: "",
     // picker: null,
@@ -213,6 +275,7 @@ export default {
     picker: new Date().toISOString().substr(0, 10),
     menuDate1: "",
     menuDate2: "",
+    // menuDate3: "",
     rulesRequired: [(v) => !!v || "This field is required."],
     headers: [
       {
@@ -319,10 +382,11 @@ export default {
 
     // allowedDates: (val) => val >= this.picker,
 
-    editItem(item) {
+    returnItem(item) {
       this.editedIndex = this.rentals.indexOf(item);
       this.editedItem = { ...item };
       this.dialog = true;
+      this.returnBook = true;
     },
 
     deleteItem(item) {
@@ -341,6 +405,7 @@ export default {
 
     close() {
       this.dialog = false;
+      this.returnBook = false;
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
@@ -358,6 +423,7 @@ export default {
 
     create() {
       this.dialog = true;
+      this.returnBook = false;
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
         // this.editedPublisher = { ...this.defaultPublisher }; /////
@@ -369,9 +435,10 @@ export default {
       if (this.$refs.form.validate()) {
         if (!this.editedItem.id) {
           delete this.editedItem.id; //id will be created in db
+          await Rental.createRental(this.editedItem);
+        } else {
+          await Rental.editRental(this.editedItem);
         }
-        const rentalResponse = await Rental.editRental(this.editedItem);
-        console.log(rentalResponse.data);
         this.initialize();
         this.close();
       }
