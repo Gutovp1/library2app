@@ -84,8 +84,7 @@
                   </template>
                   <template>
                     <v-row justify="space-around" align="center">
-                      <!-- :format="'dd / MM / yyyy'"
-                        :available-dates="{ start: new Date(), end: null }" -->
+                      <!-- :format="'dd / MM / yyyy'"-->
                       <v-date-picker
                         v-model="editedItem.rentDate"
                         no-title
@@ -157,8 +156,8 @@
                 </v-menu>
                 <v-menu
                   v-if="returnBook"
-                  ref="menuDate2"
-                  v-model="menuDate2"
+                  ref="menuDate1"
+                  v-model="menuDate1"
                   :close-on-content-click="false"
                   :return-value.sync="editedItem.returnRealDate"
                   transition="scale-transition"
@@ -178,19 +177,19 @@
                   </template>
                   <v-date-picker
                     v-model="editedItem.returnRealDate"
+                    min="'picker'"
                     no-title
                     scrollable
                   >
                     <v-spacer></v-spacer>
 
-                    <v-btn text color="primary" @click="menuDate2 = false">
+                    <v-btn text color="primary" @click="menuDate1 = false">
                       Cancel
                     </v-btn>
-                    <!-- color="primary" -->
                     <v-btn
                       text
                       color="primary"
-                      @click="$refs.menuDate2.save(editedItem.returnRealDate)"
+                      @click="$refs.menuDate1.save(editedItem.returnRealDate)"
                     >
                       OK
                     </v-btn>
@@ -227,15 +226,29 @@
     </template>
     <!-- <template v-slot:item.actions="{ item }"> -->
     <template v-slot:[`item.actions`]="{ item }">
+      <!-- <v-tooltip top color="green"> -->
       <v-icon
         v-if="!item.returnRealDate"
+        color="green"
         small
         class="mr-2"
         @click="returnItem(item)"
       >
         mdi-book
       </v-icon>
-      <v-icon v-else small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <!-- </v-tooltip> -->
+
+      <!-- <v-tooltip top color="red"> -->
+      <v-icon
+        v-if="item.returnRealDate"
+        color="red"
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+      <!-- <span>Delete</span> -->
+      <!-- </v-tooltip> -->
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresh Rentals</v-btn>
@@ -402,7 +415,6 @@ export default {
 
     close() {
       this.dialog = false;
-      this.returnBook = false;
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
