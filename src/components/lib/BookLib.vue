@@ -109,6 +109,18 @@
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresh Books</v-btn>
     </template>
+    <!-- eslint-disable-next-line -->
+    <template v-slot:item.quantity="{ item }">
+      <v-chip color="primary" dark>
+        {{ item.quantity }}
+      </v-chip>
+    </template>
+    <!-- eslint-disable-next-line -->
+    <template v-slot:item.quantityAvailable="{ item }">
+      <v-chip :color="getColor(item.quantityAvailable)" dark>
+        {{ item.quantityAvailable }}
+      </v-chip>
+    </template>
   </v-data-table>
 </template>
 
@@ -133,7 +145,7 @@ export default {
     ],
     headers: [
       {
-        text: "ID",
+        text: "Id",
         align: "start",
         sortable: false,
         value: "id",
@@ -270,6 +282,11 @@ export default {
           this.close();
         }
       }
+    },
+    getColor(q) {
+      if (q > 8) return "green";
+      else if (q > 4) return "orange";
+      else return "red";
     },
   },
 };

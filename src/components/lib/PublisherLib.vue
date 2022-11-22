@@ -110,7 +110,7 @@ export default {
     },
     headers: [
       {
-        text: "ID",
+        text: "Id",
         align: "start",
         sortable: false,
         value: "id",

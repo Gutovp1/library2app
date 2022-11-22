@@ -140,15 +140,12 @@
                         elevation="15"
                       >
                         <v-spacer></v-spacer>
-                        <v-btn
-                          color="blue darken-1"
-                          text
-                          @click="menuDate2 = false"
-                        >
+                        <v-btn color="primary" text @click="menuDate2 = false">
                           Cancel
                         </v-btn>
+                        <!-- color="blue darken-1" -->
                         <v-btn
-                          color="blue darken-1"
+                          color="primary"
                           text
                           @click="$refs.menuDate2.save(editedItem.returnDate)"
                         >
@@ -189,7 +186,7 @@
                     <v-btn text color="primary" @click="menuDate2 = false">
                       Cancel
                     </v-btn>
-
+                    <!-- color="primary" -->
                     <v-btn
                       text
                       color="primary"
@@ -279,7 +276,7 @@ export default {
     rulesRequired: [(v) => !!v || "This field is required."],
     headers: [
       {
-        text: "ID",
+        text: "Id",
         align: "start",
         sortable: false,
         value: "id",
