@@ -2,6 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="publishers"
+    :items-per-page="-1"
     :search="search"
     sort-by="id"
     class="elevation-1"
@@ -84,10 +85,33 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small color="yellow" class="mr-2" @click="editItem(item)">
-        mdi-pencil
-      </v-icon>
-      <v-icon small color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-tooltip bottom color="orange">
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon
+            color="orange"
+            v-bind="attrs"
+            v-on="on"
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+        </template>
+        <span>Edit</span>
+      </v-tooltip>
+      <v-tooltip bottom color="red">
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon
+            color="red"
+            v-bind="attrs"
+            v-on="on"
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+        <span>Delete</span>
+      </v-tooltip>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresh Publishers</v-btn>
@@ -116,10 +140,11 @@ export default {
         align: "start",
         sortable: false,
         value: "id",
+        class: "primary",
       },
-      { text: "Name", value: "name" },
-      { text: "City", value: "city" },
-      { text: "Actions", value: "actions", sortable: false },
+      { text: "Name", value: "name", class: "primary" },
+      { text: "City", value: "city", class: "primary" },
+      { text: "Actions", value: "actions", class: "primary", sortable: false },
     ],
     publishers: [],
     editedIndex: -1,

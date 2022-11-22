@@ -2,6 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="books"
+    :items-per-page="-1"
     :search="search"
     sort-by="id"
     class="elevation-1"
@@ -101,12 +102,34 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <!-- <template v-slot:item.actions="{ item }"> -->
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small color="yellow" class="mr-2" @click="editItem(item)">
-        mdi-pencil
-      </v-icon>
-      <v-icon small color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-tooltip bottom color="orange">
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon
+            color="orange"
+            v-bind="attrs"
+            v-on="on"
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+        </template>
+        <span>Edit</span>
+      </v-tooltip>
+      <v-tooltip bottom color="red">
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon
+            color="red"
+            v-bind="attrs"
+            v-on="on"
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+        <span>Delete</span>
+      </v-tooltip>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresh Books</v-btn>
@@ -151,14 +174,15 @@ export default {
         align: "start",
         sortable: false,
         value: "id",
+        class: "primary",
       },
-      { text: "Title", value: "title" },
-      { text: "Author", value: "author" },
-      { text: "Publisher", value: "publisherName" },
-      { text: "Quantity", value: "quantity" },
-      { text: "Available", value: "quantityAvailable" },
-      { text: "Year", value: "year" },
-      { text: "Actions", value: "actions", sortable: false },
+      { text: "Title", value: "title", class: "primary" },
+      { text: "Author", value: "author", class: "primary" },
+      { text: "Publisher", value: "publisherName", class: "primary" },
+      { text: "Quantity", value: "quantity", class: "primary" },
+      { text: "Available", value: "quantityAvailable", class: "primary" },
+      { text: "Year", value: "year", class: "primary" },
+      { text: "Actions", value: "actions", class: "primary", sortable: false },
     ],
     books: [],
     editedIndex: -1,

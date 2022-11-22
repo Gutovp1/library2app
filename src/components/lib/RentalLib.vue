@@ -2,6 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="rentals"
+    :items-per-page="-1"
     :search="search"
     sort-by="id"
     class="elevation-1"
@@ -177,7 +178,6 @@
                       :rules="rulesRequired"
                     ></v-text-field>
                   </template>
-                  <!-- min="{{picker}}" -->
                   <v-date-picker
                     v-model="editedItem.returnRealDate"
                     :min="editedItem.rentDate"
@@ -227,42 +227,48 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <!-- <template v-slot:item.actions="{ item }"> -->
     <template v-slot:[`item.actions`]="{ item }">
-      <!-- <v-tooltip top color="green"> -->
-      <v-icon
-        v-if="!item.returnRealDate"
-        color="green"
-        small
-        class="mr-2"
-        @click="returnItem(item)"
-      >
-        mdi-book
-      </v-icon>
-      <!-- </v-tooltip> -->
+      <v-tooltip bottom color="blue">
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon
+            v-if="!item.returnRealDate"
+            v-bind="attrs"
+            v-on="on"
+            color="blue"
+            class="mr-2"
+            @click="returnItem(item)"
+          >
+            mdi-book
+          </v-icon>
+        </template>
+        <span>Return</span>
+      </v-tooltip>
 
-      <!-- <v-tooltip top color="red"> -->
-      <v-icon
-        v-if="item.returnRealDate"
-        color="red"
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-      <!-- <span>Delete</span> -->
-      <!-- </v-tooltip> -->
+      <v-tooltip bottom color="red">
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon
+            v-if="item.returnRealDate"
+            v-bind="attrs"
+            v-on="on"
+            color="red"
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+        <span>Delete</span>
+      </v-tooltip>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresh Rentals</v-btn>
     </template>
     <template v-slot:[`item.returnRealDate`]="{ item }">
       {{
-        item.returnRealDate
+        item.returnRealDate != ""
           ? item.returnRealDate > item.returnDate
-            ? `${item.returnRealDate} (Late return)`
-            : `${item.returnRealDate} (On time)`
-          : "Return pending"
+            ? `${item.returnRealDate}   (Overdue)`
+            : `${item.returnRealDate}`
+          : "Pending"
       }}
     </template>
   </v-data-table>
@@ -291,13 +297,14 @@ export default {
         align: "start",
         sortable: false,
         value: "id",
+        class: "primary",
       },
-      { text: "Book", value: "bookTitle" },
-      { text: "User", value: "userName" },
-      { text: "Rental date", value: "rentDate" },
-      { text: "Deadline to Return", value: "returnDate" },
-      { text: "Return Date", value: "returnRealDate" },
-      { text: "Actions", value: "actions", sortable: false },
+      { text: "Book", value: "bookTitle", class: "primary" },
+      { text: "User", value: "userName", class: "primary" },
+      { text: "Rental date", value: "rentDate", class: "primary" },
+      { text: "Due date to return", value: "returnDate", class: "primary" },
+      { text: "Return date", value: "returnRealDate", class: "primary" },
+      { text: "Actions", value: "actions", class: "primary", sortable: false },
     ],
     rentals: [],
     editedIndex: -1,
@@ -318,37 +325,37 @@ export default {
       returnRealDate: "",
     },
     books: [],
-    editedBook: {
-      id: "",
-      title: "",
-      author: "",
-      publisherId: "",
-      quantity: "",
-      year: "",
-    },
-    defaultBook: {
-      id: "",
-      title: "",
-      author: "",
-      publisherId: "",
-      quantity: "",
-      year: "",
-    },
     users: [],
-    editedUser: {
-      id: "",
-      name: "",
-      address: "",
-      city: "",
-      email: "",
-    },
-    defaultUser: {
-      id: "",
-      name: "",
-      address: "",
-      city: "",
-      email: "",
-    },
+    // editedBook: {
+    //   id: "",
+    //   title: "",
+    //   author: "",
+    //   publisherId: "",
+    //   quantity: "",
+    //   year: "",
+    // },
+    // defaultBook: {
+    //   id: "",
+    //   title: "",
+    //   author: "",
+    //   publisherId: "",
+    //   quantity: "",
+    //   year: "",
+    // },
+    // editedUser: {
+    //   id: "",
+    //   name: "",
+    //   address: "",
+    //   city: "",
+    //   email: "",
+    // },
+    // defaultUser: {
+    //   id: "",
+    //   name: "",
+    //   address: "",
+    //   city: "",
+    //   email: "",
+    // },
   }),
 
   computed: {
