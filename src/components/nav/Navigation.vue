@@ -1,11 +1,24 @@
 <template>
   <header>
     <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/user">User</router-link> |
-      <router-link to="/book">Book</router-link> |
-      <router-link to="/publisher">Publisher</router-link> |
-      <router-link to="/rental">Rental</router-link>
+      <v-btn to="/"> <v-icon size="24px"> mdi-home </v-icon> Home </v-btn> |
+      <v-btn to="/user">
+        <v-icon size="24px"> mdi-account-edit </v-icon> Admin
+      </v-btn>
+      |
+      <v-btn to="/user">
+        <v-icon size="24px"> mdi-account </v-icon> User
+      </v-btn>
+      |
+      <v-btn to="/book"> <v-icon size="24px"> mdi-book </v-icon> Book </v-btn>
+      |
+      <v-btn to="/publisher">
+        <v-icon size="24px"> mdi-bookshelf </v-icon> Publisher
+      </v-btn>
+      |
+      <v-btn to="/rental">
+        <v-icon size="24px"> mdi-book-account </v-icon> Rental
+      </v-btn>
     </nav>
   </header>
 </template>
@@ -35,7 +48,7 @@ nav a {
 }
 
 nav a.router-link-exact-active {
-  color: #ffffff;
+  color: #393939;
 }
 </style>
 

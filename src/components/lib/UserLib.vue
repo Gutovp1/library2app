@@ -152,17 +152,22 @@ export default {
     ],
     headers: [
       {
-        text: "Id",
+        text: "ID",
         align: "start",
         sortable: false,
         value: "id",
-        class: "primary",
+        class: "primary text-h6",
       },
-      { text: "Name", value: "name", class: "primary" },
-      { text: "Address", value: "address", class: "primary" },
-      { text: "City", value: "city", class: "primary" },
-      { text: "Email", value: "email", class: "primary" },
-      { text: "Actions", value: "actions", class: "primary", sortable: false },
+      { text: "NAME", value: "name", class: "primary text-h6" },
+      { text: "ADDRESS", value: "address", class: "primary text-h6" },
+      { text: "CITY", value: "city", class: "primary text-h6" },
+      { text: "EMAIL", value: "email", class: "primary text-h6" },
+      {
+        text: "ACTIONS",
+        value: "actions",
+        class: "primary text-h6",
+        sortable: false,
+      },
     ],
     users: [],
     editedIndex: -1,
@@ -222,11 +227,24 @@ export default {
 
     async deleteItemConfirm() {
       // this.users.splice(this.editedIndex, 1);
-      await User.deleteUser(this.editedItem).then((res) => {
-        console.log(res.data);
-        this.initialize();
-        this.closeDelete();
-      });
+      await User.deleteUser(this.editedItem)
+        .then((res) => {
+          console.log(res.data);
+          this.initialize();
+          this.closeDelete();
+        })
+        .catch((err) => {
+          this.$swal({
+            title: "Error",
+            text: err.response.data,
+            icon: "info",
+            allowOutsideClick: false,
+          });
+        })
+        .then(() => {
+          this.initialize();
+          this.closeDelete();
+        });
     },
 
     close() {

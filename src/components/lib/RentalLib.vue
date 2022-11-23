@@ -238,7 +238,7 @@
             class="mr-2"
             @click="returnItem(item)"
           >
-            mdi-book
+            mdi-book-check
           </v-icon>
         </template>
         <span>Return</span>
@@ -293,18 +293,31 @@ export default {
     rulesRequired: [(v) => !!v || "This field is required."],
     headers: [
       {
-        text: "Id",
+        text: "ID",
         align: "start",
         sortable: false,
         value: "id",
-        class: "primary",
+        class: "primary text-h6",
       },
-      { text: "Book", value: "bookTitle", class: "primary" },
-      { text: "User", value: "userName", class: "primary" },
-      { text: "Rental date", value: "rentDate", class: "primary" },
-      { text: "Due date to return", value: "returnDate", class: "primary" },
-      { text: "Return date", value: "returnRealDate", class: "primary" },
-      { text: "Actions", value: "actions", class: "primary", sortable: false },
+      { text: "BOOK", value: "bookTitle", class: "primary text-h6" },
+      { text: "USER", value: "userName", class: "primary text-h6" },
+      { text: "RENTAL DATE", value: "rentDate", class: "primary text-h6" },
+      {
+        text: "DUE DATE",
+        value: "returnDate",
+        class: "primary text-h6",
+      },
+      {
+        text: "RETURN DATE",
+        value: "returnRealDate",
+        class: "primary text-h6",
+      },
+      {
+        text: "ACTIONS",
+        value: "actions",
+        class: "primary text-h6",
+        sortable: false,
+      },
     ],
     rentals: [],
     editedIndex: -1,

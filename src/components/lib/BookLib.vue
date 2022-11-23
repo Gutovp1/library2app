@@ -170,19 +170,28 @@ export default {
     ],
     headers: [
       {
-        text: "Id",
+        text: "ID",
         align: "start",
         sortable: false,
         value: "id",
-        class: "primary",
+        class: "primary text-h6",
       },
-      { text: "Title", value: "title", class: "primary" },
-      { text: "Author", value: "author", class: "primary" },
-      { text: "Publisher", value: "publisherName", class: "primary" },
-      { text: "Quantity", value: "quantity", class: "primary" },
-      { text: "Available", value: "quantityAvailable", class: "primary" },
-      { text: "Year", value: "year", class: "primary" },
-      { text: "Actions", value: "actions", class: "primary", sortable: false },
+      { text: "TITLE", value: "title", class: "primary text-h6" },
+      { text: "AUTHOR", value: "author", class: "primary text-h6" },
+      { text: "PUBLISHER", value: "publisherName", class: "primary text-h6" },
+      { text: "QUANTITY", value: "quantity", class: "primary text-h6" },
+      {
+        text: "AVAILABLE",
+        value: "quantityAvailable",
+        class: "primary text-h6",
+      },
+      { text: "YEAR", value: "year", class: "primary text-h6" },
+      {
+        text: "ACTIONS",
+        value: "actions",
+        class: "primary text-h6",
+        sortable: false,
+      },
     ],
     books: [],
     editedIndex: -1,
@@ -204,16 +213,16 @@ export default {
       year: "",
     },
     publishers: [],
-    editedPublisher: {
-      id: "",
-      name: "",
-      city: "",
-    },
-    defaultPublisher: {
-      id: "",
-      name: "",
-      city: "",
-    },
+    // editedPublisher: {
+    //   id: "",
+    //   name: "",
+    //   city: "",
+    // },
+    // defaultPublisher: {
+    //   id: "",
+    //   name: "",
+    //   city: "",
+    // },
   }),
 
   computed: {
@@ -259,18 +268,30 @@ export default {
     },
 
     async deleteItemConfirm() {
-      await Book.deleteBook(this.editedItem).then((res) => {
-        console.log(res.data);
-        this.initialize();
-        this.closeDelete();
-      });
+      await Book.deleteBook(this.editedItem)
+        .then((res) => {
+          console.log(res.data);
+          this.initialize();
+          this.closeDelete();
+        })
+        .catch((err) => {
+          this.$swal({
+            title: "Error",
+            text: err.response.data,
+            icon: "info",
+            allowOutsideClick: false,
+          });
+        })
+        .then(() => {
+          this.initialize();
+          this.closeDelete();
+        });
     },
 
     close() {
       this.dialog = false;
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
-        // this.editedPublisher = { ...this.defaultPublisher }; ////
         this.editedIndex = -1;
       });
       this.$refs.form.resetValidation();
@@ -280,7 +301,6 @@ export default {
       this.dialogDelete = false;
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
-        // this.editedPublisher = { ...this.defaultPublisher }; /////
         this.editedIndex = -1;
       });
     },
@@ -288,7 +308,6 @@ export default {
       this.dialog = true;
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
-        // this.editedPublisher = { ...this.defaultPublisher }; /////
         this.editedIndex = -1;
       });
     },
