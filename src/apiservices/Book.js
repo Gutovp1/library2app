@@ -23,4 +23,5 @@ export default {
   deleteBook(book) {
     return axios.delete(getUrl() + "book/" + book.id, { data: book });
   },
+
 };

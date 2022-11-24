@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import User from "../../apiservices/User.js";
+import User from "../../apiservices/user.js";
 
 export default {
   data: () => ({

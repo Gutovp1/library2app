@@ -2,7 +2,7 @@
   <header>
     <nav>
       <v-btn to="/"> <v-icon size="24px"> mdi-home </v-icon> Home </v-btn> |
-      <v-btn to="/user">
+      <v-btn to="/admin">
         <v-icon size="24px"> mdi-account-edit </v-icon> Admin
       </v-btn>
       |
