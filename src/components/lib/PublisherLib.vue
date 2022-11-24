@@ -215,7 +215,7 @@ export default {
           this.$swal({
             title: "Error",
             text: err.response.data,
-            icon: "info",
+            icon: "error",
             allowOutsideClick: false,
           });
         })
