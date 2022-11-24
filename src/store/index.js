@@ -1,13 +1,18 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
+import { computed } from "vue";
 
-export const useCounterStore = defineStore('counter', {
-  state: () => ({ count: 0 }),
+export const useAuthToken = defineStore("adminJwt", {
+  state: () => ({
+    jwtToken: "",
+  }),
   getters: {
-    double: state => state.count * 2,
-  },
-  actions: {
-    increment() {
-      this.count++
+    getToken() {
+      return computed(() => this.jwtToken);
     },
   },
-})
+  actions: {
+    setToken(val) {
+      this.jwtToken = "Bearer " + val;
+    },
+  },
+});
