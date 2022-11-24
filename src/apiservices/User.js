@@ -21,9 +21,11 @@ export default {
     return axios.delete(getUrl() + "user/" + user.id, { data: user });
   },
 
+  // authenticate: (user) => {
   authenticate: (user) => {
-    return axios.post(getUrl() + "/user/authenticate", user);
+    return axios.post(getUrl() + "/user/login", user);
   },
+  //recover
   resetPassword: (book) => {
     return axios.post(getUrl() + "/user/reset", book);
   },
