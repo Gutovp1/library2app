@@ -5,40 +5,24 @@ const getUrl = () => {
 };
 
 export default {
-  getAll() {
-    return axios.get(getUrl() + "user");
-  },
-
-  createUser(user) {
-    return axios.post(getUrl() + "user", user);
-  },
-
-  editUser(user) {
-    return axios.put(getUrl() + "user/" + user.id, user);
-  },
-
-  deleteUser(user) {
-    return axios.delete(getUrl() + "user/" + user.id, { data: user });
-  },
-
-  // authenticate: (user) => {
-  login: (user) => {
-    return axios.post(getUrl() + "login/", user);
+  // authenticate: (admin) => {
+  login: (admin) => {
+    return axios.post(getUrl() + "login/", admin);
   },
   //recover
-  resetPassword: (user) => {
-    return axios.post(getUrl() + "reset/", user);
+  resetPassword: (admin) => {
+    return axios.post(getUrl() + "reset/", admin);
   },
 
-  registerAdmin: (token, user) => {
-    return axios.post(getUrl() + "admin/", user, {
+  registerAdmin: (token, admin) => {
+    return axios.post(getUrl() + "admin/", admin, {
       headers: {
         Authorization: token,
       },
     });
   },
-  putAdmin: (token, id, user) => {
-    return axios.put(getUrl() + `admin/${id}`, user, {
+  putAdmin: (token, id, admin) => {
+    return axios.put(getUrl() + `admin/${id}`, admin, {
       headers: {
         Authorization: token,
       },

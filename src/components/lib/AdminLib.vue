@@ -17,15 +17,14 @@
             v-model="editedItem.Password"
             name="Password"
             label="Password*"
-            :rules="rulesReqMaxMin"
-            hint="Password must contain at least 4 characters."
+            :rules="rulesReqMaxMin.concat(rulesReqMaxMin)"
+            hint="Password must contain at least 6 characters."
           ></v-text-field>
           <v-text-field
             v-model="editedItem.ConfirmPassword"
             name="Confirm Password"
             label="Confirm Password*"
-            :rules="rulesReqMaxMin"
-            hint="Confirm password must match the password."
+            :rules="matchingPasswords"
           ></v-text-field>
         </v-form>
       </v-card-text>
@@ -39,7 +38,7 @@
   </v-dialog>
 </template>
 <script>
-import User from "../../apiservices/user.js";
+import Admin from "../../apiservices/admin.js";
 import { useAuthToken } from "@/store/authToken";
 
 export default {
@@ -48,7 +47,7 @@ export default {
       (v) => !!v || "This field is required.",
       (v) =>
         (v && v.length <= 100) || "Field must have less than 100 characters.",
-      (v) => (v && v.length >= 4) || "Field must have more than 3 characters.",
+      (v) => (v && v.length >= 6) || "Field must have more than 5 characters.",
     ],
     rulesEmail: [
       (v) =>
@@ -56,7 +55,7 @@ export default {
           v
         ) || "E-mail must be valid",
     ],
-    users: [],
+    admins: [],
     dialog: false,
     editedIndex: -1,
     editedItem: {
@@ -68,6 +67,7 @@ export default {
     defaultItem: {
       // id: "",
       Email: "",
+      Password: "",
       ConfirmPassword: "",
     },
   }),
@@ -77,10 +77,18 @@ export default {
     return { store };
   },
 
+  validate() {
+    if (this.$refs.form.validate()) {
+      this.save();
+    }
+  },
   computed: {
-    // formTitle() {
-    //   return this.editedIndex === -1 ? "New User" : "Edit User";
-    // },
+    matchingPasswords() {
+      return [
+        (v) => !!v || "This field is required.",
+        (v) => v === this.editedItem.Password || "Passwords do not match.",
+      ];
+    },
   },
 
   watch: {
@@ -100,18 +108,15 @@ export default {
     initialize() {
       this.dialog = true;
     },
-
     async save() {
-      if (this.$refs.form.validate()) {
-        await User.registerAdmin(this.editedItem)
-          .then((r) => {
-            console.log(r.data + " success " + this.editedItem);
-          })
-          .catch((e) => {
-            console.log("fail " + e.response.data);
-          });
-        this.initialize();
-      }
+      await Admin.registerAdmin(this.editedItem)
+        .then((r) => {
+          console.log(r.data + " success " + this.editedItem);
+        })
+        .catch((e) => {
+          console.log("fail " + e.response.data);
+        });
+      this.initialize();
     },
 
     close() {

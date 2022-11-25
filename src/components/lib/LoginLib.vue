@@ -32,7 +32,7 @@
   </v-dialog>
 </template>
 <script>
-import User from "../../apiservices/user.js";
+import Admin from "../../apiservices/admin.js";
 import { useAuthToken } from "@/store/authToken";
 
 export default {
@@ -49,16 +49,14 @@ export default {
           v
         ) || "E-mail must be valid",
     ],
-    users: [],
+    admins: [],
     dialog: false,
     editedIndex: -1,
     editedItem: {
-      // id: "",
       Email: "",
       Password: "",
     },
     defaultItem: {
-      // id: "",
       Email: "",
       Password: "",
     },
@@ -67,21 +65,6 @@ export default {
   setup() {
     const store = useAuthToken();
     return { store };
-  },
-
-  computed: {
-    // formTitle() {
-    //   return this.editedIndex === -1 ? "New User" : "Edit User";
-    // },
-  },
-
-  watch: {
-    // dialog(val) {
-    //   val || this.close();
-    // },
-    // dialogDelete(val) {
-    //   val || this.closeDelete();
-    // },
   },
 
   created() {
@@ -95,7 +78,7 @@ export default {
 
     async save() {
       if (this.$refs.form.validate()) {
-        await User.login(this.editedItem)
+        await Admin.login(this.editedItem)
           .then((r) => {
             console.log(r.data + " success " + this.editedItem);
           })
