@@ -20,6 +20,13 @@
             :rules="rulesReqMaxMin"
             hint="Password must contain at least 4 characters."
           ></v-text-field>
+          <v-text-field
+            v-model="editedItem.ConfirmPassword"
+            name="Confirm Password"
+            label="Confirm Password*"
+            :rules="rulesReqMaxMin"
+            hint="Confirm password must match the password."
+          ></v-text-field>
         </v-form>
       </v-card-text>
 
@@ -56,11 +63,12 @@ export default {
       // id: "",
       Email: "",
       Password: "",
+      ConfirmPassword: "",
     },
     defaultItem: {
       // id: "",
       Email: "",
-      Password: "",
+      ConfirmPassword: "",
     },
   }),
 
@@ -95,7 +103,7 @@ export default {
 
     async save() {
       if (this.$refs.form.validate()) {
-        await User.login(this.editedItem)
+        await User.registerAdmin(this.editedItem)
           .then((r) => {
             console.log(r.data + " success " + this.editedItem);
           })
