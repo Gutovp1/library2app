@@ -26,7 +26,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-        <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+        <v-btn color="blue darken-1" text @click="submit"> Submit </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -75,23 +75,39 @@ export default {
     initialize() {
       this.dialog = true;
     },
-
-    async save() {
+    submit() {
       if (this.$refs.form.validate()) {
-        await Admin.login(this.editedItem)
-          .then((r) => {
-            console.log(r.data + " success " + this.editedItem);
-          })
-          .catch((e) => {
-            console.log("fail " + e.response.data);
-          });
-        this.initialize();
+        this.save();
       }
+    },
+    async save() {
+      await Admin.login(this.editedItem)
+        .then((r) => {
+          this.$swal({
+            title: "Success",
+            text: "Admin is logged!",
+            icon: "success",
+            allowOutsideClick: false,
+          });
+          console.log(r);
+          this.store.setToken(r.data.accessToken);
+          this.$router.push("/");
+        })
+        .catch(() => {
+          this.$swal({
+            title: "Error",
+            text: "Email or password is wrong.",
+            icon: "error",
+            allowOutsideClick: false,
+          });
+        });
+      this.initialize();
     },
 
     close() {
       this.$refs.form.resetValidation();
       this.dialog = false;
+      this.$router.push("/");
     },
   },
 };

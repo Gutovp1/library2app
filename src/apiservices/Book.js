@@ -1,27 +1,22 @@
-import axios from "axios";
-
-const getUrl = () => {
-  return "http://localhost:5001/api/";
-};
+import http from "./axiosConfig";
 
 export default {
   getAll() {
-    return axios.get(getUrl() + "book");
+    return http.get("book");
   },
   getAvailable() {
-    return axios.get(getUrl() + "book/available");
+    return http.get("book/available");
   },
 
   createBook(book) {
-    return axios.post(getUrl() + "book", book);
+    return http.post("book", book);
   },
 
   editBook(book) {
-    return axios.put(getUrl() + "book/" + book.id, book);
+    return http.put("book/" + book.id, book);
   },
 
   deleteBook(book) {
-    return axios.delete(getUrl() + "book/" + book.id, { data: book });
+    return http.delete("book/" + book.id, { data: book });
   },
-
 };

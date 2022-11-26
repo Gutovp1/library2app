@@ -1,23 +1,19 @@
-import axios from "axios";
-
-const getUrl = () => {
-  return "http://localhost:5001/api/";
-};
+import http from "./axiosConfig";
 
 export default {
   getAll() {
-    return axios.get(getUrl() + "rental");
+    return http.get("rental");
   },
 
   createRental(rental) {
-    return axios.post(getUrl() + "rental", rental);
+    return http.post("rental", rental);
   },
 
   editRental(rental) {
-    return axios.put(getUrl() + "rental/" + rental.id, rental);
+    return http.put("rental/" + rental.id, rental);
   },
 
   deleteRental(rental) {
-    return axios.delete(getUrl() + "rental/" + rental.id, { data: rental });
+    return http.delete("rental/" + rental.id, { data: rental });
   },
 };

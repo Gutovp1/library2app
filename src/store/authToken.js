@@ -13,6 +13,7 @@ export const useAuthToken = defineStore("adminJwt", {
   actions: {
     setToken(val) {
       this.jwtToken = "Bearer " + val;
+      localStorage.setItem("adminJwt", this.jwtToken);
     },
   },
 });

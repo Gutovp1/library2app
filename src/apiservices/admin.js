@@ -1,38 +1,20 @@
-import axios from "axios";
-
-const getUrl = () => {
-  return "http://localhost:5001/api/";
-};
+import http from "./axiosConfig";
 
 export default {
-  // authenticate: (admin) => {
   login: (admin) => {
-    return axios.post(getUrl() + "login/", admin);
+    return http.post("login/", admin);
   },
-  //recover
   resetPassword: (admin) => {
-    return axios.post(getUrl() + "reset/", admin);
+    return http.post("reset/", admin);
   },
 
   registerAdmin: (token, admin) => {
-    return axios.post(getUrl() + "admin/", admin, {
-      headers: {
-        Authorization: token,
-      },
-    });
+    return http.post("admin/", admin);
   },
-  putAdmin: (token, id, admin) => {
-    return axios.put(getUrl() + `admin/${id}`, admin, {
-      headers: {
-        Authorization: token,
-      },
-    });
+  putAdmin: (token, admin) => {
+    return http.put("admin/" + admin.id, admin);
   },
-  deleteAdmin: (token, id) => {
-    return axios.delete(getUrl() + `admin/${id}`, {
-      headers: {
-        Authorization: token,
-      },
-    });
+  deleteAdmin: (token, admin) => {
+    return http.delete("admin/" + admin.id, { data: admin });
   },
 };

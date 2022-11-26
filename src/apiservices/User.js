@@ -1,23 +1,19 @@
-import axios from "axios";
-
-const getUrl = () => {
-  return "http://localhost:5001/api/";
-};
+import http from "./axiosConfig";
 
 export default {
   getAll() {
-    return axios.get(getUrl() + "user");
+    return http.get("user");
   },
 
   createUser(user) {
-    return axios.post(getUrl() + "user", user);
+    return http.post("user", user);
   },
 
   editUser(user) {
-    return axios.put(getUrl() + "user/" + user.id, user);
+    return http.put("user/" + user.id, user);
   },
 
   deleteUser(user) {
-    return axios.delete(getUrl() + "user/" + user.id, { data: user });
+    return http.delete("user/" + user.id, { data: user });
   },
 };
