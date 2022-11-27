@@ -18,7 +18,9 @@
             name="Password"
             label="Password*"
             :rules="rulesReqMaxMin"
-            hint="Password must contain at least 4 characters."
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword ? 'text' : 'password'"
+            @click:append="showPassword = !showPassword"
           ></v-text-field>
         </v-form>
       </v-card-text>
@@ -33,7 +35,6 @@
 </template>
 <script>
 import Admin from "../../apiservices/admin.js";
-import { useAuthToken } from "@/store/authToken";
 
 export default {
   data: () => ({
@@ -41,7 +42,7 @@ export default {
       (v) => !!v || "This field is required.",
       (v) =>
         (v && v.length <= 100) || "Field must have less than 100 characters.",
-      (v) => (v && v.length >= 4) || "Field must have more than 3 characters.",
+      (v) => (v && v.length >= 4) || "Field must have at least 3 characters.",
     ],
     rulesEmail: [
       (v) =>
@@ -51,6 +52,7 @@ export default {
     ],
     admins: [],
     dialog: false,
+    showPassword: "",
     editedIndex: -1,
     editedItem: {
       Email: "",
@@ -61,11 +63,6 @@ export default {
       Password: "",
     },
   }),
-
-  setup() {
-    const store = useAuthToken();
-    return { store };
-  },
 
   created() {
     this.initialize();
@@ -89,10 +86,10 @@ export default {
             icon: "success",
             allowOutsideClick: false,
           });
-          console.log(r);
-          this.store.setToken(r.data.accessToken);
-          console.log(this.store.getToken);
+          localStorage.setItem("adminJwt", "Bearer " + r.data.accessToken);
+          this.$store.dispatch("adminJwt", "Bearer " + r.data.accessToken); //
           this.$router.push("/");
+          location.reload();
         })
         .catch(() => {
           this.$swal({

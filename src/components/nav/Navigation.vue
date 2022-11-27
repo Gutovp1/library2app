@@ -20,10 +20,10 @@
           <v-icon size="24px"> mdi-book-account </v-icon> Rental
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn right to="/login" v-if="!isLoggedIn"
-          ><v-icon size="24px"> mdi-lock </v-icon> Login
+        <v-btn right to="/login" v-if="!adminJwt"
+          ><v-icon size="24px"> mdi-account-edit </v-icon> Login
         </v-btn>
-        <v-btn right @click="logout" v-if="isLoggedIn"
+        <v-btn right @click="logout" v-if="adminJwt"
           ><v-icon size="24px"> mdi-door </v-icon> Logout
         </v-btn>
       </v-app-bar>
@@ -32,23 +32,34 @@
 </template>
 
 <script>
-import { useAuthToken } from "../../store/authToken";
+import { mapGetters } from "vuex";
+import vswa2 from "sweetalert2";
 export default {
   name: "NavigationVue",
-  setup() {
-    const admin = useAuthToken();
-    return { admin };
-  },
   computed: {
-    isLoggedIn() {
-      return localStorage.getItem("adminJwt") ? true : false;
-    },
+    ...mapGetters(["adminJwt"]),
   },
+
   methods: {
     logout() {
-      localStorage.removeItem("adminJwt");
-      this.admin.$reset;
-      this.$router.push("/");
+      vswa2
+        .fire({
+          title: "Do you want to log out?",
+          showDenyButton: true,
+          confirmButtonText: "Yes",
+          denyButtonText: "No",
+        })
+        .then((res) => {
+          if (res.isConfirmed) {
+            localStorage.removeItem("adminJwt");
+            this.$store.dispatch("adminJwt", null);
+            location.reload();
+          } else if (res.isDenied) {
+            vswa2.fire("You are still logged in.", "", "info");
+          }
+        });
+
+      // this.$router.push("/");
     },
   },
 };

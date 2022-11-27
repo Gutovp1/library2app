@@ -1,133 +1,153 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
-
+      <v-col cols="12"> </v-col>
+      <v-card
+        class="card d-flex align-center justify-space-between rounded-lg pa-6"
+      >
+        <div class="card-content">
+          <v-card-title class="number pa-0 pb-7">{{
+            this.board.users.toString().padStart(2, 0)
+          }}</v-card-title>
+          <v-card-subtitle class="name pa-0">Users</v-card-subtitle>
+        </div>
+      </v-card>
+      <v-card
+        class="card d-flex align-center justify-space-between rounded-lg pa-6"
+      >
+        <div class="card-content">
+          <v-card-title class="number pa-0 pb-7">{{
+            this.board.books.toString().padStart(2, 0)
+          }}</v-card-title>
+          <v-card-subtitle class="name pa-0">Book Editions</v-card-subtitle>
+        </div>
+      </v-card>
+      <v-card
+        class="card d-flex align-center justify-space-between rounded-lg pa-6"
+      >
+        <div class="card-content">
+          <v-card-title class="number pa-0 pb-7">{{
+            this.board.booksAvailable.toString().padStart(2, 0)
+          }}</v-card-title>
+          <v-card-subtitle class="name pa-0"
+            >Available Book Editions
+          </v-card-subtitle>
+        </div>
+      </v-card>
+      <v-card
+        class="card d-flex align-center justify-space-between rounded-lg pa-6"
+      >
+        <div class="card-content">
+          <v-card-title class="number pa-0 pb-7">{{
+            this.board.publishers.toString().padStart(2, 0)
+          }}</v-card-title>
+          <v-card-subtitle class="name pa-0">Publishers</v-card-subtitle>
+        </div>
+      </v-card>
+      <v-card
+        class="card d-flex align-center justify-space-between rounded-lg pa-6"
+      >
+        <div class="card-content">
+          <v-card-title class="number pa-0 pb-7">{{
+            this.board.rentals.toString().padStart(2, 0)
+          }}</v-card-title>
+          <v-card-subtitle class="name pa-0">Pending Rentals</v-card-subtitle>
+        </div>
+      </v-card>
+      <v-card
+        class="card d-flex align-center justify-space-between rounded-lg pa-6"
+      >
+        <div class="card-content">
+          <v-card-title class="number pa-0 pb-7">{{
+            this.board.booksAvailable.toString().padStart(2, 0)
+          }}</v-card-title>
+          <v-card-subtitle class="name pa-0"
+            >Available Book Editions
+          </v-card-subtitle>
+        </div>
+      </v-card>
+      <v-card
+        class="card d-flex align-center justify-space-between rounded-lg pa-6"
+      >
+        <div class="card-content">
+          <v-card-title class="number pa-0 pb-7">{{
+            this.board.booksAvailable.toString().padStart(2, 0)
+          }}</v-card-title>
+          <v-card-subtitle class="name pa-0"
+            >Available Book Editions
+          </v-card-subtitle>
+        </div>
+      </v-card>
       <v-col class="mb-4">
         <h1 class="display-2 font-weight-bold mb-3">Welcome to Vuetify</h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br />please join our online
-          <a href="https://community.vuetifyjs.com" target="_blank"
-            >Discord Community</a
-          >
-        </p>
       </v-col>
 
       <v-col class="mb-5" cols="12">
         <h2 class="headline font-weight-bold mb-3">What's next?</h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
+        <v-row justify="center"> </v-row>
       </v-col>
 
       <v-col class="mb-5" cols="12">
         <h2 class="headline font-weight-bold mb-3">Important Links</h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
+        <v-row justify="center"> </v-row>
       </v-col>
 
       <v-col class="mb-5" cols="12">
         <h2 class="headline font-weight-bold mb-3">Ecosystem</h2>
 
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
+        <v-row justify="center"> </v-row>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import user from "../apiservices/user";
+import book from "../apiservices/book";
+import publisher from "../apiservices/publisher";
+import rental from "../apiservices/rental";
 export default {
-  name: "HelloWorld",
+  name: "HomeView",
 
   data: () => ({
-    ecosystem: [
-      {
-        text: "vuetify-loader",
-        href: "https://github.com/vuetifyjs/vuetify-loader",
-      },
-      {
-        text: "github",
-        href: "https://github.com/vuetifyjs/vuetify",
-      },
-      {
-        text: "awesome-vuetify",
-        href: "https://github.com/vuetifyjs/awesome-vuetify",
-      },
-    ],
-    importantLinks: [
-      {
-        text: "Documentation",
-        href: "https://vuetifyjs.com",
-      },
-      {
-        text: "Chat",
-        href: "https://community.vuetifyjs.com",
-      },
-      {
-        text: "Made with Vuetify",
-        href: "https://madewithvuejs.com/vuetify",
-      },
-      {
-        text: "Twitter",
-        href: "https://twitter.com/vuetifyjs",
-      },
-      {
-        text: "Articles",
-        href: "https://medium.com/vuetify",
-      },
-    ],
-    whatsNext: [
-      {
-        text: "Explore components",
-        href: "https://vuetifyjs.com/components/api-explorer",
-      },
-      {
-        text: "Select a layout",
-        href: "https://vuetifyjs.com/getting-started/pre-made-layouts",
-      },
-      {
-        text: "Frequently Asked Questions",
-        href: "https://vuetifyjs.com/getting-started/frequently-asked-questions",
-      },
-    ],
+    board: {
+      users: 0,
+      books: 0,
+      booksAvailable: 0,
+      publishers: 0,
+      rentals: 0,
+      booksTotal: 0,
+      booksRented: 0,
+    },
   }),
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    async fetchData() {
+      await user.getAll().then((res) => {
+        this.board.users = res.data.length;
+      });
+      await book.getAll().then((res) => {
+        this.board.books = res.data.length;
+        this.board.books = res.data.map((i) => {
+          i.quantity;
+        });
+        // this.board.books = this.board.books.reduce();
+        console.log(this.board.books);
+        // console.log(res.data);
+      });
+      await book.getAvailable().then((res) => {
+        this.board.booksAvailable = res.data.length;
+        console.log(res.data);
+      });
+      await publisher.getAll().then((res) => {
+        this.board.publishers = res.data.length;
+      });
+      await rental.getAll().then((res) => {
+        this.board.rentals = res.data.length;
+      });
+    },
+  },
 };
 </script>

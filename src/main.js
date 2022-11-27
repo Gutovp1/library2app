@@ -4,19 +4,14 @@ import router from "./router";
 import vuetify from "./plugins/vuetify";
 import vswa2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import { createPinia, PiniaVuePlugin } from "pinia";
-import VueCompositionAPI from "@vue/composition-api";
+import store from "./store/vuex";
 
-Vue.use(PiniaVuePlugin);
-Vue.use(VueCompositionAPI);
 Vue.use(vswa2);
-
-const pinia = createPinia();
 Vue.config.productionTip = false;
 
 new Vue({
   router,
   vuetify,
-  pinia,
+  store,
   render: (h) => h(App),
 }).$mount("#app");
