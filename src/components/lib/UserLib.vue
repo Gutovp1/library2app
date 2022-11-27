@@ -229,22 +229,27 @@ export default {
       // this.users.splice(this.editedIndex, 1);
       await User.deleteUser(this.editedItem)
         .then((res) => {
-          console.log(res.data);
-          this.initialize();
-          this.closeDelete();
+          this.$swal({
+            title: "Success",
+            text: res.data,
+            icon: "success",
+            allowOutsideClick: false,
+          });
         })
         .catch((err) => {
+          if (err.response.status === 401) {
+            err.response.data = "You need to login to continue.";
+            this.$router.push("/login");
+          }
           this.$swal({
             title: "Error",
             text: err.response.data,
             icon: "error",
             allowOutsideClick: false,
           });
-        })
-        .then(() => {
-          this.initialize();
-          this.closeDelete();
         });
+      this.initialize();
+      this.closeDelete();
     },
 
     close() {
@@ -253,7 +258,8 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
-      this.$refs.form.resetValidation();
+      this.$refs.form ? this.$refs.form.resetValidation() : "";
+      // this.$refs.form.resetValidation();
     },
 
     closeDelete() {
@@ -276,17 +282,52 @@ export default {
       if (this.$refs.form.validate()) {
         if (!this.editedItem.id) {
           delete this.editedItem.id; //id will be created in db
-          console.log(this.editedItem);
-          const userResponse = await User.createUser(this.editedItem);
-          console.log(userResponse.data);
-          this.initialize();
-          this.close();
+          await User.createUser(this.editedItem)
+            .then((res) => {
+              this.$swal({
+                title: "Success",
+                text: res.data,
+                icon: "success",
+                allowOutsideClick: false,
+              });
+            })
+            .catch((err) => {
+              if (err.response.status === 401) {
+                err.response.data = "You need to login to continue.";
+                this.$router.push("/login");
+              }
+              this.$swal({
+                title: "Error",
+                text: err.response.data,
+                icon: "error",
+                allowOutsideClick: false,
+              });
+            });
         } else {
-          const userResponse = await User.editUser(this.editedItem);
-          console.log(userResponse.data);
-          this.initialize();
-          this.close();
+          await User.editUser(this.editedItem)
+            .then((res) => {
+              this.$swal({
+                title: "Success",
+                text: res.data,
+                icon: "success",
+                allowOutsideClick: false,
+              });
+            })
+            .catch((err) => {
+              if (err.response.status === 401) {
+                err.response.data = "You need to login to continue.";
+                this.$router.push("/login");
+              }
+              this.$swal({
+                title: "Error",
+                text: err.response.data,
+                icon: "error",
+                allowOutsideClick: false,
+              });
+            });
         }
+        this.initialize();
+        this.close();
       }
     },
   },

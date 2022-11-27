@@ -270,11 +270,18 @@ export default {
     async deleteItemConfirm() {
       await Book.deleteBook(this.editedItem)
         .then((res) => {
-          console.log(res.data);
-          this.initialize();
-          this.closeDelete();
+          this.$swal({
+            title: "Success",
+            text: res.data,
+            icon: "success",
+            allowOutsideClick: false,
+          });
         })
         .catch((err) => {
+          if (err.response.status === 401) {
+            err.response.data = "You need to login to continue.";
+            this.$router.push("/login");
+          }
           this.$swal({
             title: "Error",
             text: err.response.data,
@@ -294,7 +301,8 @@ export default {
         this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
       });
-      this.$refs.form.resetValidation();
+      this.$refs.form ? this.$refs.form.resetValidation() : "";
+      // this.$refs.form.resetValidation();
     },
 
     closeDelete() {
@@ -316,18 +324,55 @@ export default {
       if (this.$refs.form.validate()) {
         if (!this.editedItem.id) {
           delete this.editedItem.id; //id will be created in db
-          const bookResponse = await Book.createBook(this.editedItem);
-          console.log(bookResponse.data);
-          this.initialize();
-          this.close();
+          await Book.createBook(this.editedItem)
+            .then((res) => {
+              this.$swal({
+                title: "Success",
+                text: res.data,
+                icon: "success",
+                allowOutsideClick: false,
+              });
+            })
+            .catch((err) => {
+              if (err.response.status === 401) {
+                err.response.data = "You need to login to continue.";
+                this.$router.push("/login");
+              }
+              this.$swal({
+                title: "Error",
+                text: err.response.data,
+                icon: "error",
+                allowOutsideClick: false,
+              });
+            });
         } else {
-          const bookResponse = await Book.editBook(this.editedItem);
-          console.log(bookResponse.data);
-          this.initialize();
-          this.close();
+          await Book.editBook(this.editedItem)
+            .then((res) => {
+              this.$swal({
+                title: "Success",
+                text: res.data,
+                icon: "success",
+                allowOutsideClick: false,
+              });
+            })
+            .catch((err) => {
+              if (err.response.status === 401) {
+                err.response.data = "You need to login to continue.";
+                this.$router.push("/login");
+              }
+              this.$swal({
+                title: "Error",
+                text: err.response.data,
+                icon: "error",
+                allowOutsideClick: false,
+              });
+            });
         }
+        this.initialize();
+        this.close();
       }
     },
+
     getColor(q) {
       if (q > 8) return "green";
       else if (q > 4) return "orange";

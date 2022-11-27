@@ -59,10 +59,10 @@
       >
         <div class="card-content">
           <v-card-title class="number pa-0 pb-7">{{
-            this.board.booksAvailable.toString().padStart(2, 0)
+            this.board.booksTotal.toString().padStart(2, 0)
           }}</v-card-title>
           <v-card-subtitle class="name pa-0"
-            >Available Book Editions
+            >Total Book Volumes
           </v-card-subtitle>
         </div>
       </v-card>
@@ -71,10 +71,10 @@
       >
         <div class="card-content">
           <v-card-title class="number pa-0 pb-7">{{
-            this.board.booksAvailable.toString().padStart(2, 0)
+            this.board.booksRented.toString().padStart(2, 0)
           }}</v-card-title>
           <v-card-subtitle class="name pa-0"
-            >Available Book Editions
+            >Rented Book Volumes
           </v-card-subtitle>
         </div>
       </v-card>
@@ -130,16 +130,15 @@ export default {
       });
       await book.getAll().then((res) => {
         this.board.books = res.data.length;
-        this.board.books = res.data.map((i) => {
-          i.quantity;
-        });
-        // this.board.books = this.board.books.reduce();
-        console.log(this.board.books);
-        // console.log(res.data);
+        this.board.booksTotal = res.data
+          .map((i) => i.quantity)
+          .reduce((a, b) => a + b);
+        this.board.booksRented = res.data
+          .map((i) => i.quantity - i.quantityAvailable)
+          .reduce((a, b) => a + b);
       });
       await book.getAvailable().then((res) => {
         this.board.booksAvailable = res.data.length;
-        console.log(res.data);
       });
       await publisher.getAll().then((res) => {
         this.board.publishers = res.data.length;

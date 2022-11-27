@@ -339,36 +339,6 @@ export default {
     },
     books: [],
     users: [],
-    // editedBook: {
-    //   id: "",
-    //   title: "",
-    //   author: "",
-    //   publisherId: "",
-    //   quantity: "",
-    //   year: "",
-    // },
-    // defaultBook: {
-    //   id: "",
-    //   title: "",
-    //   author: "",
-    //   publisherId: "",
-    //   quantity: "",
-    //   year: "",
-    // },
-    // editedUser: {
-    //   id: "",
-    //   name: "",
-    //   address: "",
-    //   city: "",
-    //   email: "",
-    // },
-    // defaultUser: {
-    //   id: "",
-    //   name: "",
-    //   address: "",
-    //   city: "",
-    //   email: "",
-    // },
   }),
 
   computed: {
@@ -386,7 +356,6 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
-    // picker: this.editedItem.rentDate,
   },
 
   created() {
@@ -421,11 +390,29 @@ export default {
     },
 
     async deleteItemConfirm() {
-      await Rental.deleteRental(this.editedItem).then((res) => {
-        console.log(res.data);
-        this.initialize();
-        this.closeDelete();
-      });
+      await Rental.deleteRental(this.editedItem)
+        .then((res) => {
+          this.$swal({
+            title: "Success",
+            text: res.data,
+            icon: "success",
+            allowOutsideClick: false,
+          });
+        })
+        .catch((err) => {
+          if (err.response.status === 401) {
+            err.response.data = "You need to login to continue.";
+            this.$router.push("/login");
+          }
+          this.$swal({
+            title: "Error",
+            text: err.response.data,
+            icon: "error",
+            allowOutsideClick: false,
+          });
+        });
+      this.initialize();
+      this.closeDelete();
     },
 
     close() {
@@ -434,7 +421,8 @@ export default {
         this.editedItem = { ...this.defaultItem };
         this.editedIndex = -1;
       });
-      this.$refs.form.resetValidation();
+      this.$refs.form ? this.$refs.form.resetValidation() : "";
+      // this.$refs.form.resetValidation();
     },
 
     closeDelete() {
@@ -459,9 +447,49 @@ export default {
       if (this.$refs.form.validate()) {
         if (!this.editedItem.id) {
           delete this.editedItem.id; //id will be created in db
-          await Rental.createRental(this.editedItem);
+          await Rental.createRental(this.editedItem)
+            .then((res) => {
+              this.$swal({
+                title: "Success",
+                text: res.data,
+                icon: "success",
+                allowOutsideClick: false,
+              });
+            })
+            .catch((err) => {
+              if (err.response.status === 401) {
+                err.response.data = "You need to login to continue.";
+                this.$router.push("/login");
+              }
+              this.$swal({
+                title: "Error",
+                text: err.response.data,
+                icon: "error",
+                allowOutsideClick: false,
+              });
+            });
         } else {
-          await Rental.editRental(this.editedItem);
+          await Rental.editRental(this.editedItem)
+            .then((res) => {
+              this.$swal({
+                title: "Success",
+                text: res.data,
+                icon: "success",
+                allowOutsideClick: false,
+              });
+            })
+            .catch((err) => {
+              if (err.response.status === 401) {
+                err.response.data = "You need to login to continue.";
+                this.$router.push("/login");
+              }
+              this.$swal({
+                title: "Error",
+                text: err.response.data,
+                icon: "error",
+                allowOutsideClick: false,
+              });
+            });
         }
         this.initialize();
         this.close();

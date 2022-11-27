@@ -2,6 +2,8 @@
   <header>
     <nav>
       <v-app-bar>
+        <v-spacer></v-spacer>
+
         <v-btn active-class="activated-btn" to="/">
           <v-icon size="24px"> mdi-home </v-icon> Home
         </v-btn>
@@ -9,7 +11,7 @@
         <v-btn to="/user">
           <v-icon size="24px"> mdi-account </v-icon> User
         </v-btn>
-
+        |
         <v-btn to="/book"> <v-icon size="24px"> mdi-book </v-icon> Book </v-btn>
         |
         <v-btn to="/publisher">
