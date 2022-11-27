@@ -91,6 +91,7 @@ export default {
           });
           console.log(r);
           this.store.setToken(r.data.accessToken);
+          console.log(this.store.getToken);
           this.$router.push("/");
         })
         .catch(() => {

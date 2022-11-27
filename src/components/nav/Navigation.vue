@@ -20,8 +20,11 @@
           <v-icon size="24px"> mdi-book-account </v-icon> Rental
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn right to="/login"
+        <v-btn right to="/login" v-if="!isLoggedIn"
           ><v-icon size="24px"> mdi-lock </v-icon> Login
+        </v-btn>
+        <v-btn right @click="logout" v-if="isLoggedIn"
+          ><v-icon size="24px"> mdi-door </v-icon> Logout
         </v-btn>
       </v-app-bar>
     </nav>
@@ -29,11 +32,29 @@
 </template>
 
 <script>
+import { useAuthToken } from "../../store/authToken";
 export default {
   name: "NavigationVue",
+  setup() {
+    const admin = useAuthToken();
+    return { admin };
+  },
+  computed: {
+    isLoggedIn() {
+      return localStorage.getItem("adminJwt") ? true : false;
+    },
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("adminJwt");
+      this.admin.$reset;
+      this.$router.push("/");
+    },
+  },
 };
 </script>
 
+<!--
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -70,8 +91,8 @@ nav a.router-link-exact-active {
   display: none;
 }
 </style>
-
-<!-- Add "scoped" attribute to limit CSS to this component only 
+-->
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;
@@ -88,4 +109,3 @@ a {
   color: #42b983;
 }
 </style>
--->

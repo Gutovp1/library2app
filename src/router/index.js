@@ -44,6 +44,11 @@ const routes = [
     name: "rental",
     component: () => import("../views/RentalView.vue"),
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: HomeView,
+  },
 ];
 
 const router = new VueRouter({

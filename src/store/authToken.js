@@ -3,17 +3,17 @@ import { computed } from "vue";
 
 export const useAuthToken = defineStore("adminJwt", {
   state: () => ({
-    jwtToken: "",
+    adminJwt: "",
   }),
   getters: {
     getToken() {
-      return computed(() => this.jwtToken);
+      return computed(() => this.adminJwt);
     },
   },
   actions: {
     setToken(val) {
-      this.jwtToken = "Bearer " + val;
-      localStorage.setItem("adminJwt", this.jwtToken);
+      this.adminJwt = "Bearer " + val;
+      localStorage.setItem("adminJwt", this.adminJwt);
     },
   },
 });
