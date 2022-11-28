@@ -1,13 +1,6 @@
 <template>
   <v-container class="fill-height">
     <v-row align="center" justify="center">
-      <v-col cols="12"></v-col>
-      <v-col cols="12"></v-col>
-      <v-col cols="12"></v-col>
-      <v-col cols="12"></v-col>
-      <v-col cols="12"></v-col>
-      <v-col cols="12"></v-col>
-      <v-col cols="12"></v-col>
       <v-col cols="12" sm="5">
         <v-icon color="black" size="64px">mdi-lock</v-icon>
         <h4 class="display-1 mb-2">

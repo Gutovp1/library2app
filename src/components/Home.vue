@@ -81,6 +81,32 @@
           <v-card-subtitle class="name pa-0">Users</v-card-subtitle>
         </div>
       </v-card>
+      <v-card class="chart d-flex flex-column align-center">
+        <h2>Rental Overview</h2>
+        <div id="radarChart" :class="loaders">
+          <DoughnutRental
+            v-if="exposeChart"
+            :data="filteredRentalDates"
+            class="chartComp"
+          />
+          <!-- <half-circle-spinner
+            v-else
+            :animation-duration="1000"
+            :size="60"
+            :color="'#FF7E55'"
+          /> -->
+        </div>
+      </v-card>
+      <v-card class="chart d-flex flex-column align-center">
+        <h2>Book Overview</h2>
+        <div id="radarChart" :class="loaders">
+          <DoughnutBook
+            v-if="exposeChart"
+            :data="filteredBookData"
+            class="chartComp"
+          />
+        </div>
+      </v-card>
     </v-row>
   </v-container>
 </template>
@@ -90,10 +116,18 @@ import user from "../apiservices/user";
 import book from "../apiservices/book";
 import publisher from "../apiservices/publisher";
 import rental from "../apiservices/rental";
+import DoughnutRental from "./lib/DoughnutRental.vue";
+import DoughnutBook from "./lib/DoughnutBook.vue";
+
 export default {
   name: "HomeView",
+  components: {
+    DoughnutRental,
+    DoughnutBook,
+  },
 
   data: () => ({
+    exposeChart: false,
     board: {
       users: 0,
       books: 0,
@@ -103,10 +137,29 @@ export default {
       booksTotal: 0,
       booksRented: 0,
     },
+    currentYear: new Date().getFullYear(),
+    rentals: [],
+    filteredRentalDates: {
+      pending: 0,
+      returnedOnTime: 0,
+      returnedOverdue: 0,
+    },
+    filteredBookData: {
+      titles: 0,
+      availableTitles: 0,
+      totalVolumes: 0,
+    },
   }),
+  computed: {
+    loaders() {
+      return this.exposeChart ? false : "d-flex justify-center align-center";
+    },
+  },
+
   created() {
     this.fetchData();
   },
+
   methods: {
     async fetchData() {
       await user.getAll().then((res) => {
@@ -129,6 +182,27 @@ export default {
       });
       await rental.getAll().then((res) => {
         this.board.rentals = res.data.length;
+        this.rentals = res.data;
+        console.log(this.rentals);
+      });
+      this.filterRentalStates(this.rentals);
+      this.filteredBookData.titles = this.board.books;
+      this.filteredBookData.availableTitles = this.board.booksAvailable;
+      this.filteredBookData.totalVolumes = this.board.booksTotal;
+      this.exposeChart = true;
+    },
+
+    filterRentalStates(rentals) {
+      rentals.forEach((rental) => {
+        if (rental.returnRealDate === "") {
+          this.filteredRentalDates.pending += 1;
+        } else {
+          if (rental.returnRealDate <= rental.returnDate) {
+            this.filteredRentalDates.returnedOnTime += 1;
+          } else {
+            this.filteredRentalDates.returnedOverdue += 1;
+          }
+        }
       });
     },
   },
