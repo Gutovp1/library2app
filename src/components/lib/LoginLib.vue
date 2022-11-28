@@ -1,37 +1,56 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
-    <v-card>
-      <v-card-title>
-        <span class="text-h5">Sign In</span>
-      </v-card-title>
+  <v-container class="fill-height">
+    <v-row align="center" justify="center">
+      <v-col cols="12"></v-col>
+      <v-col cols="12"></v-col>
+      <v-col cols="12"></v-col>
+      <v-col cols="12"></v-col>
+      <v-col cols="12"></v-col>
+      <v-col cols="12"></v-col>
+      <v-col cols="12"></v-col>
+      <v-col cols="12" sm="5">
+        <v-icon color="black" size="64px">mdi-lock</v-icon>
+        <h4 class="display-1 mb-2">
+          You need to login to manage the library assets.
+        </h4>
+        <v-btn color="primary" @click="dialog = true">Login</v-btn>
+      </v-col>
+    </v-row>
 
-      <v-card-text>
-        <v-form class="mx-2" ref="form">
-          <v-text-field
-            v-model="editedItem.Email"
-            name="Email"
-            label="Email*"
-            :rules="rulesReqMaxMin.concat(rulesEmail)"
-          ></v-text-field>
-          <v-text-field
-            v-model="editedItem.Password"
-            name="Password"
-            label="Password*"
-            :rules="rulesReqMaxMin"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPassword ? 'text' : 'password'"
-            @click:append="showPassword = !showPassword"
-          ></v-text-field>
-        </v-form>
-      </v-card-text>
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Sign In</span>
+        </v-card-title>
 
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-        <v-btn color="blue darken-1" text @click="submit"> Submit </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+        <v-card-text>
+          <v-form class="mx-2" ref="form">
+            <v-text-field
+              v-model="editedItem.Email"
+              name="Email"
+              label="Email*"
+              :rules="rulesReqMaxMin.concat(rulesEmail)"
+            ></v-text-field>
+            <v-text-field
+              v-model="editedItem.Password"
+              name="Password"
+              label="Password*"
+              :rules="rulesReqMaxMin"
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="showPassword ? 'text' : 'password'"
+              @click:append="showPassword = !showPassword"
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
+          <v-btn color="blue darken-1" text @click="submit"> Submit </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 <script>
 import Admin from "../../apiservices/admin.js";
@@ -105,7 +124,7 @@ export default {
     close() {
       this.$refs.form.resetValidation();
       this.dialog = false;
-      this.$router.push("/");
+      // this.$router.push("/");
     },
   },
 };

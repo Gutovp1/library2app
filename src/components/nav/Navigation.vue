@@ -5,7 +5,7 @@
         <v-spacer></v-spacer>
 
         <v-btn active-class="activated-btn" to="/">
-          <v-icon size="24px"> mdi-home </v-icon> Home
+          <v-icon size="4px"> mdi-home </v-icon> Home
         </v-btn>
         |
         <v-btn to="/user">

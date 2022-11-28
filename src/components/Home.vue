@@ -2,16 +2,8 @@
   <v-container>
     <v-row class="text-center">
       <v-col cols="12"> </v-col>
-      <v-card
-        class="card d-flex align-center justify-space-between rounded-lg pa-6"
-      >
-        <div class="card-content">
-          <v-card-title class="number pa-0 pb-7">{{
-            this.board.users.toString().padStart(2, 0)
-          }}</v-card-title>
-          <v-card-subtitle class="name pa-0">Users</v-card-subtitle>
-        </div>
-      </v-card>
+      <v-col cols="12"> </v-col>
+
       <v-card
         class="card d-flex align-center justify-space-between rounded-lg pa-6"
       >
@@ -19,7 +11,7 @@
           <v-card-title class="number pa-0 pb-7">{{
             this.board.books.toString().padStart(2, 0)
           }}</v-card-title>
-          <v-card-subtitle class="name pa-0">Book Editions</v-card-subtitle>
+          <v-card-subtitle class="name pa-0">Book Titles</v-card-subtitle>
         </div>
       </v-card>
       <v-card
@@ -30,7 +22,32 @@
             this.board.booksAvailable.toString().padStart(2, 0)
           }}</v-card-title>
           <v-card-subtitle class="name pa-0"
-            >Available Book Editions
+            >Available Book Titles
+          </v-card-subtitle>
+        </div>
+      </v-card>
+
+      <v-card
+        class="card d-flex align-center justify-space-between rounded-lg pa-6"
+      >
+        <div class="card-content">
+          <v-card-title class="number pa-0 pb-7">{{
+            this.board.booksTotal.toString().padStart(2, 0)
+          }}</v-card-title>
+          <v-card-subtitle class="name pa-0"
+            >Total Book Volumes
+          </v-card-subtitle>
+        </div>
+      </v-card>
+      <v-card
+        class="card d-flex align-center justify-space-between rounded-lg pa-6"
+      >
+        <div class="card-content">
+          <v-card-title class="number pa-0 pb-7">{{
+            this.board.booksRented.toString().padStart(2, 0)
+          }}</v-card-title>
+          <v-card-subtitle class="name pa-0"
+            >Rented Book Volumes
           </v-card-subtitle>
         </div>
       </v-card>
@@ -59,44 +76,11 @@
       >
         <div class="card-content">
           <v-card-title class="number pa-0 pb-7">{{
-            this.board.booksTotal.toString().padStart(2, 0)
+            this.board.users.toString().padStart(2, 0)
           }}</v-card-title>
-          <v-card-subtitle class="name pa-0"
-            >Total Book Volumes
-          </v-card-subtitle>
+          <v-card-subtitle class="name pa-0">Users</v-card-subtitle>
         </div>
       </v-card>
-      <v-card
-        class="card d-flex align-center justify-space-between rounded-lg pa-6"
-      >
-        <div class="card-content">
-          <v-card-title class="number pa-0 pb-7">{{
-            this.board.booksRented.toString().padStart(2, 0)
-          }}</v-card-title>
-          <v-card-subtitle class="name pa-0"
-            >Rented Book Volumes
-          </v-card-subtitle>
-        </div>
-      </v-card>
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">Welcome to Vuetify</h1>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">What's next?</h2>
-        <v-row justify="center"> </v-row>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">Important Links</h2>
-        <v-row justify="center"> </v-row>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">Ecosystem</h2>
-
-        <v-row justify="center"> </v-row>
-      </v-col>
     </v-row>
   </v-container>
 </template>
