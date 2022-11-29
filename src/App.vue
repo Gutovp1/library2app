@@ -19,4 +19,11 @@ export default {
     this.$store.dispatch("adminJwt", response);
   },
 };
+//need to evaluate when are logged in and close the browser. Reopen shows logged in, but it requires login upon edit book.
 </script>
+
+<style>
+.v-application .flex-nowrap {
+  height: 100%;
+}
+</style>

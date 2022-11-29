@@ -30,7 +30,7 @@ export default {
         labels: ["Pending", "On time", "Overdue"],
         datasets: [
           {
-            backgroundColor: ["#FF7E55", "#49C9A8", "#35CFFF"],
+            backgroundColor: ["blue", "green", "orange"],
             data: Object.values(this.data),
           },
         ],

@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <h4>{{ msg }}</h4>
+    <h4>{{ returnMsg() }}</h4>
   </div>
 </template>
 
@@ -9,26 +9,23 @@ export default {
   name: "FooterView",
   data() {
     return {
-      msg: "I'm Footer",
+      msg: `Gutovp - copyright © `,
     };
+  },
+  methods: {
+    returnMsg() {
+      return this.msg + new Date().getFullYear();
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.footer {
+  color: darkgray;
+  background-color: white;
+  box-shadow: inset 0px 4px 3px rgba(50, 50, 50, 0.75);
+  text-align: center;
 }
 </style>

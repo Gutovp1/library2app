@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+    id="vtable"
     :headers="headers"
     :items="rentals"
     :items-per-page="-1"
@@ -11,7 +12,7 @@
     no-results-text="No rentals found."
   >
     <template v-slot:top>
-      <v-toolbar flat>
+      <v-toolbar flat class="toolbar">
         <v-toolbar-title>RENTALS</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
@@ -231,7 +232,7 @@
       <v-tooltip bottom color="blue">
         <template v-slot:activator="{ on, attrs }">
           <v-icon
-            v-if="!item.returnRealDate"
+            v-show="!item.returnRealDate"
             v-bind="attrs"
             v-on="on"
             color="blue"
@@ -247,7 +248,7 @@
       <v-tooltip bottom color="red">
         <template v-slot:activator="{ on, attrs }">
           <v-icon
-            v-if="item.returnRealDate"
+            v-show="item.returnRealDate"
             v-bind="attrs"
             v-on="on"
             color="red"
@@ -451,7 +452,7 @@ export default {
             .then((res) => {
               this.$swal({
                 title: "Success",
-                text: res.data,
+                text: `Rental ${res.data.id} has been created successfully.`,
                 icon: "success",
                 allowOutsideClick: false,
               });
@@ -473,7 +474,7 @@ export default {
             .then((res) => {
               this.$swal({
                 title: "Success",
-                text: res.data,
+                text: `Rental ${res.data.id} has been finished successfully.`,
                 icon: "success",
                 allowOutsideClick: false,
               });

@@ -1,32 +1,38 @@
 <template>
   <header>
     <nav>
-      <v-app-bar>
+      <v-app-bar fixed>
+        <h1 class="logo">
+          <v-icon class="logo-icon" size="34px">
+            mdi-book-open-page-variant
+          </v-icon>
+          LIVRER
+        </h1>
         <v-spacer></v-spacer>
 
         <v-btn active-class="activated-btn" to="/">
           <v-icon size="24px"> mdi-home </v-icon> Home
         </v-btn>
-        |
+
         <v-btn to="/user">
           <v-icon size="24px"> mdi-account </v-icon> User
         </v-btn>
-        |
+
         <v-btn to="/book"> <v-icon size="24px"> mdi-book </v-icon> Book </v-btn>
-        |
+
         <v-btn to="/publisher">
-          <v-icon size="24px"> mdi-bookshelf </v-icon> Publisher
+          <v-icon size="24px"> mdi-domain </v-icon> Publisher
         </v-btn>
-        |
+
         <v-btn to="/rental">
           <v-icon size="24px"> mdi-book-account </v-icon> Rental
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn right to="/login" v-if="!adminJwt"
-          ><v-icon size="24px"> mdi-account-edit </v-icon> Login
+          ><v-icon size="24px"> mdi-login </v-icon> Login
         </v-btn>
         <v-btn right @click="logout" v-if="adminJwt"
-          ><v-icon size="24px"> mdi-door </v-icon> Logout
+          ><v-icon size="24px"> mdi-logout </v-icon> Logout
         </v-btn>
       </v-app-bar>
     </nav>
@@ -67,14 +73,24 @@ export default {
 };
 </script>
 
-<!--
 <style>
-#app {
+/* #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+} */
+header {
+  background-color: pink;
+}
+h1,
+.logo-icon {
+  color: darkslategrey;
+}
+.logo {
+  margin: 2rem;
+  align-items: center;
 }
 
 nav {
@@ -92,33 +108,7 @@ nav a.router-link-exact-active {
 .v-btn.activated-btn {
   position: relative;
 }
-.v-btn.activated-btn::after {
-  position: absolute;
-  content: "";
-  height: 100%;
-  width: 100%;
-  border: 3px solid #02af8e !important;
-  transition: all 0.3s;
-}
-.activated-btn.v-btn::before {
-  display: none;
-}
-</style>
--->
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.v-btn {
+  margin: 5px;
 }
 </style>

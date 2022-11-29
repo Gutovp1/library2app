@@ -1,15 +1,10 @@
 <template>
-  <v-container class="fill-height">
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="5">
-        <v-icon color="black" size="64px">mdi-lock</v-icon>
-        <h4 class="display-1 mb-2">
-          You need to login to manage the library assets.
-        </h4>
-        <v-btn color="primary" @click="dialog = true">Login</v-btn>
-      </v-col>
-    </v-row>
-
+  <div class="dashboard">
+    <v-card class="card-login">
+      <v-icon color="black" size="64px">mdi-account-edit</v-icon>
+      <h4 class="card-info">You need to login to manage the library assets.</h4>
+      <v-btn color="primary" @click="dialog = true">Login</v-btn>
+    </v-card>
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
@@ -39,11 +34,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-          <v-btn color="blue darken-1" text @click="submit"> Submit </v-btn>
+          <v-btn color="blue darken-1" text @click="submit"> Login </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-container>
+  </div>
 </template>
 <script>
 import Admin from "../../apiservices/admin.js";
@@ -122,3 +117,35 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.v-main__wrap {
+  display: flex;
+}
+.home {
+  width: 100vw;
+}
+.dashboard {
+  display: flex;
+  /* margin: 20px; */
+  height: 88vh;
+  justify-content: center;
+  align-items: center;
+  background-color: darkgray;
+}
+
+.card-login {
+  padding: 20px 65px;
+  width: 30vw;
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.card-info {
+  font-size: 22px;
+  font-weight: 600;
+}
+</style>

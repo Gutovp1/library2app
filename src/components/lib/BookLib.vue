@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+    id="vtable"
     :headers="headers"
     :items="books"
     :items-per-page="-1"
@@ -11,7 +12,7 @@
     no-results-text="No books found."
   >
     <template v-slot:top>
-      <v-toolbar flat>
+      <v-toolbar flat class="toolbar">
         <v-toolbar-title>BOOKS</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
@@ -164,9 +165,15 @@ export default {
         (v && v.length <= 100) || "Field must have less than 100 characters.",
       (v) => (v && v.length >= 4) || "Field must have more than 3 characters.",
     ],
-    rulesInteger: [(v) => /^[0-9]+$/.test(v) || "Enter only numbers."],
+    rulesInteger: [
+      (v) => /^[0-9]+$/.test(v) || "Enter only numbers.",
+      (v) => v > 0 || "Enter a quantity greater than zero.",
+    ],
     rulesYear: [
       (v) => /^[0-9]{4}$/.test(v) || "Enter a valid year containing 4 numbers.",
+      (v) =>
+        v <= new Date().getFullYear() ||
+        "Year cannot be greater than the current year.",
     ],
     headers: [
       {
@@ -328,7 +335,7 @@ export default {
             .then((res) => {
               this.$swal({
                 title: "Success",
-                text: res.data,
+                text: `Book ${res.data.title} has been created successfully.`,
                 icon: "success",
                 allowOutsideClick: false,
               });
@@ -350,10 +357,11 @@ export default {
             .then((res) => {
               this.$swal({
                 title: "Success",
-                text: res.data,
+                text: `Book ${res.data.title} has been edited successfully.`,
                 icon: "success",
                 allowOutsideClick: false,
               });
+              console.log(res.data);
             })
             .catch((err) => {
               if (err.response.status === 401) {
@@ -381,3 +389,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.toolbar {
+  background-color: gray;
+}
+</style>

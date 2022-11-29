@@ -11,7 +11,7 @@
     no-results-text="No users found."
   >
     <template v-slot:top>
-      <v-toolbar flat>
+      <v-toolbar flat class="toolbar">
         <v-toolbar-title>USERS</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
@@ -286,7 +286,7 @@ export default {
             .then((res) => {
               this.$swal({
                 title: "Success",
-                text: res.data,
+                text: `User ${res.data.name} has been created successfully.`,
                 icon: "success",
                 allowOutsideClick: false,
               });
@@ -308,7 +308,7 @@ export default {
             .then((res) => {
               this.$swal({
                 title: "Success",
-                text: res.data,
+                text: `User ${res.data.name} has been edited successfully.`,
                 icon: "success",
                 allowOutsideClick: false,
               });
