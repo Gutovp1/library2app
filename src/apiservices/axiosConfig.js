@@ -4,7 +4,7 @@ import axios from "axios";
 // axios.defaults.headers.common["Authorization"] =
 // localStorage.getItem("adminJwt");
 const instance = axios.create({
-  baseURL: "http://localhost:5001/api/",
+  baseURL: "https://library-livre-api.azurewebsites.net/",
   headers: {
     "Content-Type": "application/json",
     Authorization: localStorage.getItem("adminJwt"),
