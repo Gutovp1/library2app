@@ -6,7 +6,7 @@ import axios from "axios";
 const instance = axios.create({
   // baseURL: "https://library-livre-api.azurewebsites.net/",
   // baseURL: "http://localhost:5001/api/",
-  baseURL: "https://tired-pears-do-177-24-156-179.loca.lt/",
+  baseURL: "https://tired-pears-do-177-24-156-179.loca.lt/api/",
   headers: {
     "Content-Type": "application/json",
     Authorization: localStorage.getItem("adminJwt"),
