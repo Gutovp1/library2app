@@ -92,10 +92,10 @@
 </template>
 
 <script>
-import user from "../apiservices/user";
-import book from "../apiservices/book";
-import publisher from "../apiservices/publisher";
-import rental from "../apiservices/rental";
+import user from "../apiservices/User.js";
+import book from "../apiservices/Book.js";
+import publisher from "../apiservices/Publisher.js";
+import rental from "../apiservices/Rental.js";
 import DoughnutRental from "./lib/DoughnutRental.vue";
 import DoughnutBook from "./lib/DoughnutBook.vue";
 

@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import Publisher from "../../apiservices/publisher.js";
+import Publisher from "../../apiservices/Publisher.js";
 
 export default {
   data: () => ({

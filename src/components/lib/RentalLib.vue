@@ -276,9 +276,9 @@
 </template>
 
 <script>
-import Rental from "../../apiservices/rental.js";
-import Book from "../../apiservices/book.js";
-import User from "../../apiservices/user.js";
+import Rental from "../../apiservices/Rental.jss";
+import Book from "../../apiservices/Book.js";
+import User from "../../apiservices/User.js";
 
 export default {
   data: () => ({

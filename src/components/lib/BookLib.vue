@@ -151,8 +151,8 @@
 </template>
 
 <script>
-import Book from "../../apiservices/book.js";
-import Publisher from "../../apiservices/publisher.js";
+import Book from "../../apiservices/Book.js";
+import Publisher from "../../apiservices/Publisher.js";
 
 export default {
   data: () => ({
