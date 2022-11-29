@@ -81,9 +81,7 @@ export default {
   text-align: center;
   color: #2c3e50;
 } */
-header {
-  background-color: pink;
-}
+
 h1,
 .logo-icon {
   color: darkslategrey;
