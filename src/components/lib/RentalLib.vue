@@ -276,7 +276,7 @@
 </template>
 
 <script>
-import Rental from "../../apiservices/Rental.jss";
+import Rental from "../../apiservices/Rental.js";
 import Book from "../../apiservices/Book.js";
 import User from "../../apiservices/User.js";
 
