@@ -84,7 +84,7 @@ export default {
 
 h1,
 .logo-icon {
-  color: darkslategrey;
+  color: gray;
 }
 .logo {
   margin: 2rem;
