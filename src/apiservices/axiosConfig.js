@@ -6,7 +6,7 @@ import axios from "axios";
 const instance = axios.create({
   // baseURL: "https://library-livre-api.azurewebsites.net/",
   // baseURL: "http://localhost:5001/api/",
-  baseURL: "https://great-papayas-dig-177-24-157-123.loca.lt/api/",
+  baseURL: "https://nice-hotels-warn-177-24-157-123.loca.lt/api/",
   headers: {
     "Bypass-Tunnel-Reminder": "1",
     "Content-Type": "application/json",

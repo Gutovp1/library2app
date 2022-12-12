@@ -336,6 +336,8 @@ export default {
 
     async save() {
       if (this.$refs.form.validate()) {
+        this.editedItem.publisherId = this.editedItem.publisher.id;
+        delete this.editedItem.publisher; //no need to include publisher in book creation
         if (!this.editedItem.id) {
           delete this.editedItem.id; //id will be created in db
           await Book.createBook(this.editedItem)
