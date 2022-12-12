@@ -44,16 +44,16 @@
 
             <v-card-text>
               <v-form class="mx-2" ref="form">
-                <v-select
+                <v-autocomplete
                   v-if="!returnBook"
                   v-model="editedItem.bookId"
                   :items="books"
                   :item-text="'title'"
                   :item-value="'id'"
                   :rules="rulesRequired"
-                  menu-props="auto"
+                  :search-input.sync="searching"
                   label="Book"
-                ></v-select>
+                ></v-autocomplete>
                 <v-select
                   v-if="!returnBook"
                   v-model="editedItem.userId"
@@ -245,7 +245,7 @@
         <span>Return</span>
       </v-tooltip>
 
-      <v-tooltip bottom color="red">
+      <!-- <v-tooltip bottom color="red">
         <template v-slot:activator="{ on, attrs }">
           <v-icon
             v-show="item.returnRealDate"
@@ -258,7 +258,7 @@
           </v-icon>
         </template>
         <span>Delete</span>
-      </v-tooltip>
+      </v-tooltip> -->
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresh Rentals</v-btn>
@@ -286,11 +286,10 @@ export default {
     returnBook: false,
     dialogDelete: false,
     search: "",
-    // picker: null,
+    searching: null,
     picker: new Date().toISOString().substr(0, 10),
     menuDate1: "",
     menuDate2: "",
-    // menuDate3: "",
     rulesRequired: [(v) => !!v || "This field is required."],
     headers: [
       {
@@ -357,6 +356,9 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
+    searching(val) {
+      val && val !== this.editedItem.bookId && this.querySelection(val);
+    },
   },
 
   created() {
@@ -377,6 +379,16 @@ export default {
         });
     },
 
+    querySelections(v) {
+      this.loading = true;
+      // Simulated ajax query
+      setTimeout(() => {
+        this.items = this.books.filter((e) => {
+          return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1;
+        });
+        this.loading = false;
+      }, 500);
+    },
     returnItem(item) {
       this.editedIndex = this.rentals.indexOf(item);
       this.editedItem = { ...item };

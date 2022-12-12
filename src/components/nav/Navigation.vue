@@ -1,13 +1,15 @@
 <template>
   <header>
     <nav>
-      <v-app-bar fixed>
-        <h1 class="logo">
-          <v-icon class="logo-icon" size="34px">
-            mdi-book-open-page-variant
-          </v-icon>
-          LIVRER
-        </h1>
+      <v-app-bar
+        id="toolbar"
+        fixed
+        :class="$vuetify.breakpoint.mdAndUp ? 'showmenu' : 'hidemenu'"
+      >
+        <v-icon class="logo-icon" size="33px">
+          mdi-book-open-page-variant
+        </v-icon>
+        <h1 class="logo">LIVRER</h1>
         <v-spacer></v-spacer>
 
         <v-btn active-class="activated-btn" to="/">
@@ -35,6 +37,49 @@
           ><v-icon size="24px"> mdi-logout </v-icon> Logout
         </v-btn>
       </v-app-bar>
+      <v-app-bar
+        fixed
+        :class="$vuetify.breakpoint.mdAndUp ? 'hidemenu' : 'showmenu'"
+      >
+        <v-icon class="logo-icon" size="30px">
+          mdi-book-open-page-variant
+        </v-icon>
+        <h2 class="logo-mobile">LIVRER</h2>
+        <v-spacer></v-spacer>
+        <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+      </v-app-bar>
+      <v-navigation-drawer
+        class="hidden-lg-and-up drawer"
+        v-model="drawer"
+        absolute
+        temporary
+      >
+        <v-list nav dense>
+          <v-list-item-group v-model="group">
+            <v-list-item to="/">
+              <v-icon size="22px"> mdi-home </v-icon> Home
+            </v-list-item>
+            <v-list-item to="/user">
+              <v-icon size="22px"> mdi-account </v-icon> User
+            </v-list-item>
+            <v-list-item to="/book">
+              <v-icon size="22px"> mdi-book </v-icon> Book
+            </v-list-item>
+            <v-list-item to="/publisher">
+              <v-icon size="22px"> mdi-domain </v-icon> Publisher
+            </v-list-item>
+            <v-list-item to="/rental">
+              <v-icon size="22px"> mdi-book-account </v-icon> Rental
+            </v-list-item>
+            <v-list-item to="/login" v-if="!adminJwt"
+              ><v-icon size="24px"> mdi-login </v-icon> Login
+            </v-list-item>
+            <v-list-item @click="logout" v-if="adminJwt"
+              ><v-icon size="24px"> mdi-logout </v-icon> Logout
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-navigation-drawer>
     </nav>
   </header>
 </template>
@@ -47,7 +92,15 @@ export default {
   computed: {
     ...mapGetters(["adminJwt"]),
   },
-
+  data: () => ({
+    drawer: false,
+    group: null,
+  }),
+  watch: {
+    "$vuetify.breakpoint.mdAndUp"() {
+      this.drawer = false;
+    },
+  },
   methods: {
     logout() {
       vswa2
@@ -66,29 +119,36 @@ export default {
             vswa2.fire("You are still logged in.", "", "info");
           }
         });
-
-      // this.$router.push("/");
     },
   },
 };
 </script>
 
 <style>
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-} */
+.hidemenu {
+  display: none;
+}
+
+.showmenu {
+  display: block;
+}
+
+#toolbar {
+  align-items: center;
+}
 
 h1,
+h2,
 .logo-icon {
   color: gray;
+  margin-left: 1rem;
 }
 .logo {
-  margin: 2rem;
-  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.logo-mobile {
+  margin-top: 0.3rem;
 }
 
 nav {

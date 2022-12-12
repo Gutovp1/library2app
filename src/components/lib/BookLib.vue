@@ -56,12 +56,12 @@
                   label="Author"
                 ></v-text-field>
                 <v-select
-                  v-model="editedItem.publisherId"
                   :items="publishers"
                   :item-text="'name'"
                   :item-value="'id'"
+                  v-model="editedItem.publisher"
                   :rules="rulesRequired"
-                  menu-props="auto"
+                  return-object
                   label="Publisher"
                 ></v-select>
                 <v-text-field
@@ -185,7 +185,7 @@ export default {
       },
       { text: "TITLE", value: "title", class: "primary text-h6" },
       { text: "AUTHOR", value: "author", class: "primary text-h6" },
-      { text: "PUBLISHER", value: "publisherName", class: "primary text-h6" },
+      { text: "PUBLISHER", value: "publisher.name", class: "primary text-h6" },
       { text: "QUANTITY", value: "quantity", class: "primary text-h6" },
       {
         text: "AVAILABLE",
@@ -206,6 +206,7 @@ export default {
       id: "",
       title: "",
       author: "",
+      publisher: null,
       publisherId: "",
       quantity: "",
       quantityAvailable: "",
@@ -215,16 +216,17 @@ export default {
       id: "",
       title: "",
       author: "",
+      publisher: null,
       publisherId: "",
       quantity: "",
       year: "",
     },
     publishers: [],
-    // editedPublisher: {
-    //   id: "",
-    //   name: "",
-    //   city: "",
-    // },
+    editedPublisher: {
+      id: "",
+      name: "",
+      city: "",
+    },
     // defaultPublisher: {
     //   id: "",
     //   name: "",
@@ -264,7 +266,12 @@ export default {
 
     editItem(item) {
       this.editedIndex = this.books.indexOf(item);
+      // this.editedPublisher = {
+      //   ...this.publishers.filter((el) => el.id == item.publisherId),
+      // };
+      // console.log(this.editedPublisher);
       this.editedItem = { ...item }; //Object assign does not work properly here
+      console.log(this.editedItem);
       this.dialog = true;
     },
 
