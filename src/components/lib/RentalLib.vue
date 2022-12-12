@@ -53,6 +53,7 @@
                   :rules="rulesRequired"
                   :search-input.sync="searching"
                   label="Book"
+                  persintent-hint="Only available titles are listed."
                 ></v-autocomplete>
                 <v-select
                   v-if="!returnBook"
@@ -357,7 +358,7 @@ export default {
       val || this.closeDelete();
     },
     searching(val) {
-      val && val !== this.editedItem.bookId && this.querySelection(val);
+      val && val !== this.editedItem.bookId;
     },
   },
 
@@ -379,16 +380,6 @@ export default {
         });
     },
 
-    querySelections(v) {
-      this.loading = true;
-      // Simulated ajax query
-      setTimeout(() => {
-        this.items = this.books.filter((e) => {
-          return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1;
-        });
-        this.loading = false;
-      }, 500);
-    },
     returnItem(item) {
       this.editedIndex = this.rentals.indexOf(item);
       this.editedItem = { ...item };
@@ -435,7 +426,6 @@ export default {
         this.editedIndex = -1;
       });
       this.$refs.form ? this.$refs.form.resetValidation() : "";
-      // this.$refs.form.resetValidation();
     },
 
     closeDelete() {
@@ -451,7 +441,6 @@ export default {
       this.returnBook = false;
       this.$nextTick(() => {
         this.editedItem = { ...this.defaultItem };
-        // this.editedPublisher = { ...this.defaultPublisher }; /////
         this.editedIndex = -1;
       });
     },
