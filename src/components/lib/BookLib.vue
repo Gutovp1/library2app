@@ -197,7 +197,7 @@ export default {
         text: "ACTIONS",
         value: "actions",
         class: "primary text-h6",
-        // sortable: false,
+        sortable: false,
       },
     ],
     books: [],
