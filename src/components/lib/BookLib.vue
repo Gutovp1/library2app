@@ -222,16 +222,6 @@ export default {
       year: "",
     },
     publishers: [],
-    editedPublisher: {
-      id: "",
-      name: "",
-      city: "",
-    },
-    // defaultPublisher: {
-    //   id: "",
-    //   name: "",
-    //   city: "",
-    // },
   }),
 
   computed: {
@@ -266,10 +256,6 @@ export default {
 
     editItem(item) {
       this.editedIndex = this.books.indexOf(item);
-      // this.editedPublisher = {
-      //   ...this.publishers.filter((el) => el.id == item.publisherId),
-      // };
-      // console.log(this.editedPublisher);
       this.editedItem = { ...item }; //Object assign does not work properly here
       console.log(this.editedItem);
       this.dialog = true;

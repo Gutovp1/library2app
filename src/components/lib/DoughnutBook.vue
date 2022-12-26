@@ -27,10 +27,10 @@ export default {
   data() {
     return {
       chartData: {
-        labels: ["Rented books", "Available books"],
+        labels: ["Available books", "Rented books"],
         datasets: [
           {
-            backgroundColor: ["red", "green"],
+            backgroundColor: ["green", "red"],
             data: Object.values(this.data),
           },
         ],

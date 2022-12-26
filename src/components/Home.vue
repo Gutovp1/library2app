@@ -125,8 +125,8 @@ export default {
       returnedOverdue: 0,
     },
     filteredBookData: {
-      rentedBooks: 0,
       availableBooks: 0,
+      rentedBooks: 0,
     },
   }),
   computed: {
